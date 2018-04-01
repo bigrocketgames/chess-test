@@ -1,15 +1,44 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import BoardSpace from './boardSpace';
+import { updateMessageSuccess } from '../redux/message/actions';
 
 class GameBoard extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      selectedCell: 0,
+      readyToMove: 'no'
+    }
+
+    this.handlCellClick = this.handleCellClick.bind(this)
+  }
+
+  handleCellClick = (e, cell) => {
+    let message = ""
+    const { readyToMove } = this.state
+
+    if (readyToMove === 'no' || cell.piece !== "") {
+      message = `You have chosen the ${cell.pieceColor} ${cell.piece} in cell ${cell.space}.`
+      this.props.updateMessageSuccess(message)
+      this.setState({
+        selectedCell: cell.id,
+        readyToMove: 'yes'
+      })
+    } else if (readyToMove === 'yes') {
+      // establish helper to determine if piece can move to new spot
+    }
+  }
 
   render() {
     const { board } = this.props
+    const { selectedCell } = this.state
     return(
       <div className="board">
-        {board.length && board.map(space => <BoardSpace key={space.id} space={space} />)}
+        {board.length && board.map(space => <BoardSpace key={space.id} space={space} selected={(selectedCell === space.id) ? "selected" : ""} handleCellClick={(e, cell) => this.handleCellClick(e, cell)} />)}
       </div>
     )
   }
@@ -21,4 +50,10 @@ const mapStateToProps = (state) => {
   })
 }
 
-export default connect(mapStateToProps)(GameBoard);
+const mapdDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    updateMessageSuccess: updateMessageSuccess,
+  }, dispatch);
+}
+
+export default connect((mapStateToProps), mapdDispatchToProps)(GameBoard);
