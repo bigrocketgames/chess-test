@@ -29,9 +29,9 @@
 .space {
   width: 98px;
   height: 98px;
-  border: 1px black dashed;
+  border: 1px black solid;
 }
 
 .selected {
-  border: 1px green solid;
+  background-color: lime;
 }
