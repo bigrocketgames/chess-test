@@ -27,7 +27,6 @@
 }
 
 .space {
-  display: flex;
   width: 98px;
   height: 98px;
   border: 1px black solid;
@@ -41,13 +40,37 @@
   background-color: darkorange;
 }
 
+.selected {
+  background-color: lime;
+}
+
+/* TODO - add .knightWhite and .bishopWhite classes */
+.knightwhite {
+  background: center / contain no-repeat url("./images/knight_white.png");
+  animation: 2s fadeIn;
+}
+
+.bishopwhite {
+  background: center / contain no-repeat url("./images/bishop_white.png");
+  animation: 2s fadeIn;
+}
+
+.nameDiv {
+  position: relative;
+  width: 95px;
+  height: 98px;
+}
+
 p.spaceName {
-  align-self: flex-end;
+  font-size: 0.5em;
   width: 100%;
-  margin: 0 2px 0 0;
+  margin: 0;
+  padding: 88px 5px 0 0;
   text-align: right;
 }
 
-.selected {
-  background-color: lime;
+/* fade-in animation for chess pieces */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
