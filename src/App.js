@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import GameBoard from './components/gameBoard';
+import Message from './components/message';
 
 class App extends Component {
   render() {
@@ -16,6 +17,7 @@ class App extends Component {
         <section className="moves">
         </section>
         <section className="messages">
+          <Message />
         </section>
       </div>
     );
