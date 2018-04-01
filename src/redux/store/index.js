@@ -3,10 +3,12 @@ import thunk from 'redux-thunk';
 
 import board from '../board/reducer';
 import history from '../history/reducer';
+import message from '../message/reducer';
 
 const reducers = combineReducers({
   board,
-  history
+  history,
+  message
 })
 
 const middleware = [thunk]
