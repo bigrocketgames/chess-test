@@ -44,15 +44,14 @@
   background-color: lime;
 }
 
-/* TODO - add .knightWhite and .bishopWhite classes */
 .knightwhite {
   background: center / contain no-repeat url("./images/knight_white.png");
-  animation: 2s fadeIn;
+  animation: 1s fadeIn;
 }
 
 .bishopwhite {
   background: center / contain no-repeat url("./images/bishop_white.png");
-  animation: 2s fadeIn;
+  animation: 1s fadeIn;
 }
 
 .nameDiv {
