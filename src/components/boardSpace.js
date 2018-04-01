@@ -9,14 +9,16 @@ class BoardSpace extends Component {
   
   handleClick = (e, space) => {
     e.preventDefault();
-    console.log("you clicked" + space.props.space.space);
+    console.log("you clicked " + space.props.space.value + " " + space.props.space.space); 
   }
 
   render() {
     const { space } = this.props
     return(
-      <div className={(space.color === "light") ? "space light" : "space dark"} onClick={(e) => this.handleClick(e, this)} >
-        <p className="spaceName">{space.space}</p>
+      <div className={`space ${space.color}`} onClick={(e) => this.handleClick(e, this)} >
+        <div className={`nameDiv +  ${space.value}`}>
+          <p className="spaceName">{space.space}</p>
+        </div>
       </div>
     )
   }
