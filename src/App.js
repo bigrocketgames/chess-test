@@ -15,7 +15,7 @@ class App extends Component {
         </section>
         <section className="moves">
         </section>
-        <section className="alerts">
+        <section className="messages">
         </section>
       </div>
     );
