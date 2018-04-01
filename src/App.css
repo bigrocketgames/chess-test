@@ -27,9 +27,25 @@
 }
 
 .space {
+  display: flex;
   width: 98px;
   height: 98px;
   border: 1px black solid;
+}
+
+.light {
+  background-color: lightskyblue;
+}
+
+.dark {
+  background-color: darkorange;
+}
+
+p.spaceName {
+  align-self: flex-end;
+  width: 100%;
+  margin: 0 2px 0 0;
+  text-align: right;
 }
 
 .selected {

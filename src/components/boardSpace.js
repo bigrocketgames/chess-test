@@ -7,16 +7,16 @@ class BoardSpace extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
   
-  handleClick = (e) => {
+  handleClick = (e, space) => {
     e.preventDefault();
-    e.currentTarget.className = "space selected";
+    console.log("you clicked" + space.props.space.space);
   }
 
   render() {
     const { space } = this.props
     return(
-      <div className="space" onClick={this.handleClick} >
-        <p>This is space: {space.id}</p>
+      <div className={(space.color === "light") ? "space light" : "space dark"} onClick={(e) => this.handleClick(e, this)} >
+        <p className="spaceName">{space.space}</p>
       </div>
     )
   }
