@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
+import BoardSpace from './boardSpace';
 
 class GameBoard extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      board: [ {location: 'a1', value: ''} ]
-    }
-  }
 
   render() {
-    
+    const { board } = this.props
     return(
       <div className="board">
-        <p>This is where the game board goes.</p>
+        {board.length && board.map(space => <BoardSpace key={space.id} space={space} />)}
       </div>
     )
   }
 }
 
-export default GameBoard;
+const mapStateToProps = (state) => {
+  return({
+    board: state.board
+  })
+}
+
+export default connect(mapStateToProps)(GameBoard);
