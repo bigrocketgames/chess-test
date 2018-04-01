@@ -22,4 +22,16 @@
   width: 800px;
   height: 800px;
   border: 5px black solid;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.space {
+  width: 98px;
+  height: 98px;
+  border: 1px black dashed;
+}
+
+.selected {
+  border: 1px green solid;
 }
