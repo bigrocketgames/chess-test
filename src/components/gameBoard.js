@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import BoardSpace from './boardSpace';
 import { updateMessageSuccess } from '../redux/message/actions';
+import { canPieceMoveToNewCell } from '../utils/helpers';
 
 class GameBoard extends Component {
   constructor(props) {
@@ -11,7 +12,8 @@ class GameBoard extends Component {
 
     this.state = {
       selectedCell: 0,
-      readyToMove: 'no'
+      readyToMove: 'no',
+      cellMoveFrom: null
     }
 
     this.handlCellClick = this.handleCellClick.bind(this)
@@ -26,10 +28,16 @@ class GameBoard extends Component {
       this.props.updateMessageSuccess(message)
       this.setState({
         selectedCell: cell.id,
-        readyToMove: 'yes'
+        readyToMove: 'yes',
+        pieceToMove: cell
       })
     } else if (readyToMove === 'yes') {
-      // establish helper to determine if piece can move to new spot
+      if (canPieceMoveToNewCell(this.state.pieceToMove.piece, this.state.pieceToMove, cell)) {
+        // dispatch to board to move piece
+        // dispatch to message to display that a move was made
+        // dispatch to history to update history with move
+        // reset local state to get ready for next move
+      }
     }
   }
 
