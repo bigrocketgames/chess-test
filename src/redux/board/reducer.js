@@ -13,7 +13,7 @@ const initialState = [
 
   {id: 49, row: 7, cell: 1, space: "a2", value: "", color: "light"}, {id: 50, row: 7, cell: 2, space: "b2", value: "", color: "dark"}, {id: 51, row: 7, cell: 3, space: "c2", value: "", color: "light"}, {id: 52, row: 7, cell: 4, space: "d2", value: "", color: "dark"}, {id: 53, row: 7, cell: 5, space: "e2", value: "", color: "light"}, {id: 54, row: 7, cell: 6, space: "f2", value: "", color: "dark"}, {id: 55, row: 7, cell: 7, space: "g2", value: "", color: "light"}, {id: 56, row: 7, cell: 8, space: "h2", value: "", color: "dark"},
 
-  {id: 57, row: 8, cell: 1, space: "a1", value: "", color: "dark"}, {id: 58, row: 8, cell: 2, space: "b1", value: "", color: "light"}, {id: 59, row: 8, cell: 3, space: "c1", value: "", color: "dark"}, {id: 60, row: 8, cell: 4, space: "d1", value: "", color: "light"}, {id: 61, row: 8, cell: 5, space: "e1", value: "", color: "dark"}, {id: 62, row: 8, cell: 6, space: "f1", value: "", color: "light"}, {id: 63, row: 8, cell: 7, space: "g1", value: "", color: "dark"}, {id: 64, row: 8, cell: 8, space: "h1", value: "", color: "light"},
+  {id: 57, row: 8, cell: 1, space: "a1", value: "", color: "dark"}, {id: 58, row: 8, cell: 2, space: "b1", value: "knightwhite", color: "light"}, {id: 59, row: 8, cell: 3, space: "c1", value: "bishopwhite", color: "dark"}, {id: 60, row: 8, cell: 4, space: "d1", value: "", color: "light"}, {id: 61, row: 8, cell: 5, space: "e1", value: "", color: "dark"}, {id: 62, row: 8, cell: 6, space: "f1", value: "", color: "light"}, {id: 63, row: 8, cell: 7, space: "g1", value: "", color: "dark"}, {id: 64, row: 8, cell: 8, space: "h1", value: "", color: "light"},
 ]
 
 export default (state = initialState, action) => {
