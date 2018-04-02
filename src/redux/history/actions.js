@@ -1,12 +1,8 @@
 export const ADD_HISTORY_SUCCESS = 'ADD_HISTORY_SUCCESS';
 
-export const addHistorySuccess = (piece, pieceColor, value, oldCell, newCell) => {
+export const addHistorySuccess = (history) => {
   return({
     type: ADD_HISTORY_SUCCESS,
-    piece,
-    pieceColor,
-    value,
-    oldCell,
-    newCell
+    history
   })
 }
