@@ -11,14 +11,20 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">Welcome to My Chess Test</h1>
         </header>
-        <section className="game">
-          <GameBoard />
-        </section>
-        <section className="moves">
-        </section>
-        <section className="messages">
-          <Message />
-        </section>
+        <div className="main">
+          <div className="left">
+            <section className="game">
+              <GameBoard />
+            </section>
+          </div>
+          <div className="right">
+            <section className="history">
+            </section>
+            <section className="messages">
+              <Message />
+            </section>
+          </div>
+        </div>
       </div>
     );
   }
