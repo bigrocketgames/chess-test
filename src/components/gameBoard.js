@@ -105,7 +105,7 @@ class GameBoard extends Component {
           {/* map through the spaces to create the playing space */}
           {board.length && board.map(space => <BoardSpace key={space.id} space={space} selected={(selectedCell === space.id) ? "selected" : ""} flashSuccess={(successfullMoveCell === space.id) ? "flashSuccess" : ""} flashError={(errorMoveCell === space.id) ? "flashError" : ""} handleCellClick={(e, cell) => this.handleCellClick(e, cell)} />)}
         </div>
-        <Button classes="reset-btn" handleClick={this.resetBoard} />
+        <Button classes="reset-btn" handleClick={this.resetBoard} label="Reset Board" />
       </div>
     )
   }
