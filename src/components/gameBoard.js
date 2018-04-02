@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { BoardSpace } from '../containers/boardSpace';
+import { Button } from '../containers/button';
 import { updateMessageSuccess, resetMessageState } from '../redux/message/actions';
 import { moveSuccess, resetBoard } from '../redux/board/actions';
 import { addHistorySuccess, resetHistory } from '../redux/history/actions';
@@ -101,7 +102,7 @@ class GameBoard extends Component {
         <div className="board">
           {board.length && board.map(space => <BoardSpace key={space.id} space={space} selected={(selectedCell === space.id) ? "selected" : ""} flashSuccess={(successfullMoveCell === space.id) ? "flashSuccess" : ""} flashError={(errorMoveCell === space.id) ? "flashError" : ""} handleCellClick={(e, cell) => this.handleCellClick(e, cell)} />)}
         </div>
-        <button className="reset-btn" onClick={this.resetBoard}>Reset Board</button>
+        <Button classes="reset-btn" handleClick={this.resetBoard} />
       </div>
     )
   }
