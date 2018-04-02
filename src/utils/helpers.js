@@ -9,7 +9,7 @@ export const canPieceMoveToNewCell = (board, piece, currentCell, newCell) => {
 
     case "Knight":
       // implement logic to check if valid move
-      return true;
+      return validKnightMove(currentCell, newCell);
 
     default:
       return false
@@ -21,7 +21,17 @@ const validBishopMove = (currentCell, newCell) => {
 }
 
 const validKnightMove = (currentCell, newCell) => {
-  
+  // if the move is up 2 rows then verify that it only is 1 cell in either direction.
+  if (Math.abs(currentCell.row - newCell.row) === 2) {
+    return Math.abs(currentCell.cell - newCell.cell) === 1
+
+  // if the move is up 1 row then verify that is only is 2 cells in either direction.
+  } else if (Math.abs(currentCell.row - newCell.row) === 1) {
+    return Math.abs(currentCell.cell - newCell.cell) === 2
+  }
+
+  // if the move is not up 1 or 2 then return false to indicate the move is not valid.
+  return false
 }
 
 const isBishopBlocked = (board, currentCell, newCell) => {
@@ -59,7 +69,7 @@ const isBishopBlocked = (board, currentCell, newCell) => {
         })
       }
 
-      // check if next cell is currently occupied
+      // check if next cell is currently occupied and return true if it is occupied to indicate that the bishop is blocked from moving past
       if (checkCell.value !== "") {
         return true
       }
