@@ -14,7 +14,9 @@ class GameBoard extends Component {
     this.state = {
       selectedCell: 0,
       readyToMove: 'no',
-      cellMoveFrom: null
+      cellMoveFrom: null,
+      errorMoveCell: 0,
+      successfullMoveCell: 0
     }
 
     this.handlCellClick = this.handleCellClick.bind(this)
@@ -23,10 +25,11 @@ class GameBoard extends Component {
   handleCellClick = (e, cell) => {
     let message = ""
     const { readyToMove, pieceToMove } = this.state
+    const { updateMessageSuccess } = this.props
 
     if ((readyToMove === 'no' && cell.piece !== "") || cell.piece !== "") {
       message = `You have chosen the ${cell.pieceColor} ${cell.piece} in cell ${cell.space}.`
-      this.props.updateMessageSuccess(message)
+      updateMessageSuccess(message)
       this.setState({
         selectedCell: cell.id,
         readyToMove: 'yes',
@@ -39,7 +42,7 @@ class GameBoard extends Component {
         
         // dispatch to message to display that a move was made
         message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!`
-        this.props.updateMessageSuccess(message)
+        updateMessageSuccess(message)
         
         // dispatch to history to update history with move
         
@@ -50,17 +53,28 @@ class GameBoard extends Component {
           readyToMove: 'no',
           pieceToMove: null
         })
+      } else {
+        // dispatch to message to display that an invalid move was attempted
+        message = `You can not move ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!`
+        updateMessageSuccess(message)
+
+        // Set local state for to show which cell was erroneously attempted to move to
+        this.setState({
+          ...this.state,
+          errorMoveCell: cell.id
+        })
+
       }
     }
   }
 
   render() {
     const { board } = this.props
-    const { selectedCell } = this.state
-    console.log(board)
+    const { selectedCell, errorMoveCell } = this.state
+    console.log(errorMoveCell)
     return(
       <div className="board">
-        {board.length && board.map(space => <BoardSpace key={space.id} space={space} selected={(selectedCell === space.id) ? "selected" : ""} handleCellClick={(e, cell) => this.handleCellClick(e, cell)} />)}
+        {board.length && board.map(space => <BoardSpace key={space.id} space={space} selected={(selectedCell === space.id) ? "selected" : ""} flashError={(errorMoveCell === space.id) ? "flashError" : ""} handleCellClick={(e, cell) => this.handleCellClick(e, cell)} />)}
       </div>
     )
   }
