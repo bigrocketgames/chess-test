@@ -4,20 +4,36 @@
 
 .App-header {
   background-color: #222;
-  height: 75px;
+  height: 28px;
   padding: 20px;
   color: white;
 }
 
 .App-title {
   font-size: 1.5em;
+  margin: 0;
 }
 
 .left {
   margin: 10px 0 0 10px;
+  text-align: left;
 }
 
 /* Board */
+.board-container {
+  float: left;
+  margin-bottom: 20px;
+  height: 850px;
+  width: 800px;
+}
+
+.reset-btn {
+  margin-top: 10px;
+  font-size: 1.5em;
+  border-radius: 3px;
+  background-color: lightskyblue;
+}
+
 .board {
   float: left;
   width: 800px;
@@ -110,8 +126,19 @@ p.spaceName {
 /* History section */
 .history {
   width: 500px;
-  height: 500px;
+  height: 600px;
   border: 5px black solid;
+}
+
+.history-title {
+  border-bottom: 3px black solid;
+  margin-bottom: 0px;
+}
+
+.movesContainer {
+  height: 549px;
+  width: 500px;
+  overflow: scroll;
 }
 
 
