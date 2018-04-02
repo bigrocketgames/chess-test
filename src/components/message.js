@@ -7,7 +7,7 @@ class Message extends Component {
     const { message } = this.props
     return(
       <div>
-        <p>{(message.length > 0) ? message : "Please select a piece to move."}</p>
+        <p>{message}</p>
       </div>
     )
   }
