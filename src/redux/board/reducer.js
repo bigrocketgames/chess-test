@@ -1,4 +1,4 @@
-import { MOVE_SUCCESS, RESET_BOARD_SUCCESS } from './actions';
+import { MOVE_SUCCESS, RESET_BOARD_SUCCESS, REWIND_BOARD_SUCCESS } from './actions';
 
 const initialState = [
   {id: 1, row: 1, cell: 1, space: "a8", value: "", color: "light", piece: "", pieceColor: ""}, {id: 2, row: 1, cell: 2, space: "b8", value: "", color: "dark", piece: "", pieceColor: ""}, {id: 3, row: 1, cell: 3, space: "c8", value: "", color: "light", piece: "", pieceColor: ""}, {id: 4, row: 1, cell: 4, space: "d8", value: "", color: "dark", piece: "", pieceColor: ""}, {id: 5, row: 1, cell: 5, space: "e8", value: "", color: "light", piece: "", pieceColor: ""}, {id: 6, row: 1, cell: 6, space: "f8", value: "", color: "dark", piece: "", pieceColor: ""}, {id: 7, row: 1, cell: 7, space: "g8", value: "", color: "light", piece: "", pieceColor: ""}, {id: 8, row: 1, cell: 8, space: "h8", value: "", color: "dark", piece: "", pieceColor: ""},
@@ -45,6 +45,9 @@ export default (state = initialState, action) => {
 
     case RESET_BOARD_SUCCESS:
       return initialState;
+
+    case REWIND_BOARD_SUCCESS:
+      return action.board;
 
     default:
       return state;
