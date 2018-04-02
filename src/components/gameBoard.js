@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { BoardSpace } from '../containers/boardSpace';
 import { updateMessageSuccess, resetMessageState } from '../redux/message/actions';
 import { moveSuccess, resetBoard } from '../redux/board/actions';
-import { addHistorySuccess } from '../redux/history/actions';
+import { addHistorySuccess, resetHistory } from '../redux/history/actions';
 import { canPieceMoveToNewCell } from '../utils/helpers';
 
 class GameBoard extends Component {
@@ -24,15 +24,9 @@ class GameBoard extends Component {
     this.resetBoard = this.resetBoard.bind(this)
   }
 
-  componentDidMount() {
-    // make initial commit to history with beginning board
-    const historyMessage = "Beginning of the game."
-    const history = {board: this.props.board, message: historyMessage}
-    this.props.addHistorySuccess(history)
-  }
-
   resetBoard() {
     this.props.resetBoard();
+    this.props.resetHistory();
     this.props.resetMessageState();
   }
 
@@ -118,6 +112,7 @@ const mapdDispatchToProps = (dispatch) => {
     moveSuccess: moveSuccess,
     resetBoard: resetBoard,
     addHistorySuccess: addHistorySuccess,
+    resetHistory: resetHistory
   }, dispatch);
 }
 
