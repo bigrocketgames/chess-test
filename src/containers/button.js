@@ -2,14 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export const Button = (props) => {
-  const {handleClick, classes} = props
+  const {handleClick, classes, label} = props
 
   return(
-    <button className={`${classes}`} onClick={handleClick}>Reset Board</button>
+    <button className={`${classes}`} onClick={handleClick}>{label}</button>
   )
 }
 
 Button.propTypes = {
   handleClick: PropTypes.func,
-  classes: PropTypes.string
+  classes: PropTypes.string,
+  label: PropTypes.string
 }
