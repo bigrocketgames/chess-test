@@ -5,9 +5,23 @@ import PropTypes from 'prop-types';
 
 import { HistoryMessages } from '../containers/historyMessages';
 import { rewindBoard } from '../redux/board/actions';
-// need to add action and reducer for rewinding history - add action to mapDispatchToProps
+import { rewindHistory } from '../redux/history/actions';
+import { updateMessageSuccess } from '../redux/message/actions';
+import { Button } from '../containers/button';
 
 class History extends Component {
+  constructor(props){
+    super(props)
+
+    this.undoMoveOnClick = this.undoMoveOnClick.bind(this)
+  }
+
+  undoMoveOnClick(lastBoard){
+    this.props.rewindBoard(lastBoard);
+    this.props.rewindHistory();
+    const message = "You have undone that move."
+    this.props.updateMessageSuccess(message);
+  }
 
   scrollToBottom() {
     this.messagesEnd.scrollIntoView({behavior: "smooth"});
@@ -20,7 +34,7 @@ class History extends Component {
 
   render() {
     const { history } = this.props
-    const prevBoard = history[history.length-1]
+    const prevBoard = history[history.length-1].board
     
     return(
       <div>
@@ -29,6 +43,7 @@ class History extends Component {
           { history.length && history.map(history => <HistoryMessages key={history.id} move={history} />)}
           <div ref={(el) => { this.messagesEnd = el; }}></div>
         </div>
+        {history.length > 1 && <Button classes="rewind-btn" handleClick={() => this.undoMoveOnClick(prevBoard)} label="Undo Move" />}
       </div>
     )
   }
@@ -46,8 +61,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
-    rewindBoard: rewindBoard
-  })
+    rewindBoard: rewindBoard,
+    rewindHistory: rewindHistory,
+    updateMessageSuccess: updateMessageSuccess
+  }, dispatch)
 }
 
 export default connect((mapStateToProps), mapDispatchToProps)(History);
