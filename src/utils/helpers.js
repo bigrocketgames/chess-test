@@ -12,3 +12,11 @@ export const canPieceMoveToNewCell = (piece, currentCell, newCell) => {
       return false
   }
 }
+
+const validBishopMove = (currentCell, newCell) => {
+
+}
+
+const validKnightMove = (currentCell, newCell) => {
+  
+}
