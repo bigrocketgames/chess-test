@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import BoardSpace from './boardSpace';
 import { updateMessageSuccess } from '../redux/message/actions';
+import { moveSuccess } from '../redux/board/actions';
 import { canPieceMoveToNewCell } from '../utils/helpers';
 
 class GameBoard extends Component {
@@ -34,6 +35,7 @@ class GameBoard extends Component {
     } else if (readyToMove === 'yes') {
       if (canPieceMoveToNewCell(this.state.pieceToMove.piece, this.state.pieceToMove, cell)) {
         // dispatch to board to move piece
+        this.props.moveSuccess(this.state.pieceToMove.piece, this.state.pieceToMove, cell)
         // dispatch to message to display that a move was made
         // dispatch to history to update history with move
         // reset local state to get ready for next move
@@ -61,6 +63,7 @@ const mapStateToProps = (state) => {
 const mapdDispatchToProps = (dispatch) => {
   return bindActionCreators({
     updateMessageSuccess: updateMessageSuccess,
+    moveSuccess: moveSuccess
   }, dispatch);
 }
 

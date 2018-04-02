@@ -1,3 +1,5 @@
+import { MOVE_SUCCESS } from './actions';
+
 const initialState = [
   {id: 1, row: 1, cell: 1, space: "a8", value: "", color: "light", piece: "", pieceColor: ""}, {id: 2, row: 1, cell: 2, space: "b8", value: "", color: "dark", piece: "", pieceColor: ""}, {id: 3, row: 1, cell: 3, space: "c8", value: "", color: "light", piece: "", pieceColor: ""}, {id: 4, row: 1, cell: 4, space: "d8", value: "", color: "dark", piece: "", pieceColor: ""}, {id: 5, row: 1, cell: 5, space: "e8", value: "", color: "light", piece: "", pieceColor: ""}, {id: 6, row: 1, cell: 6, space: "f8", value: "", color: "dark", piece: "", pieceColor: ""}, {id: 7, row: 1, cell: 7, space: "g8", value: "", color: "light", piece: "", pieceColor: ""}, {id: 8, row: 1, cell: 8, space: "h8", value: "", color: "dark", piece: "", pieceColor: ""},
 
@@ -18,6 +20,28 @@ const initialState = [
 
 export default (state = initialState, action) => {
   switch(action.type) {
+    case MOVE_SUCCESS:
+      const oldCellIndex = state.findIndex(cell => cell.id === action.oldCell.id)
+      const newCellIndex = state.findIndex(cell => cell.id === action.newCell.id)
+      const updatedOldCell = {...action.oldCell, piece: "", pieceColor: "", value: ""}
+      const updatedNewCell = {...action.newCell, piece: action.oldCell.piece, pieceColor: action.oldCell.pieceColor, value: action.oldCell.value}
+      if (oldCellIndex > newCellIndex) {
+        return [
+          ...state.slice(0, newCellIndex),
+          updatedNewCell,
+          ...state.slice(newCellIndex + 1, oldCellIndex),
+          updatedOldCell,
+          ...state.slice(oldCellIndex + 1)
+        ]
+      } else {
+        return [
+          ...state.slice(0, oldCellIndex),
+          updatedOldCell,
+          ...state.slice(oldCellIndex + 1, newCellIndex),
+          updatedNewCell,
+          ...state.slice(newCellIndex + 1)
+        ]
+      }
 
     default:
       return state;
