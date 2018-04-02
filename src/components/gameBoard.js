@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { BoardSpace } from '../containers/boardSpace';
 import { updateMessageSuccess, resetMessageState } from '../redux/message/actions';
-import { moveSuccess } from '../redux/board/actions';
+import { moveSuccess, resetBoard } from '../redux/board/actions';
 import { addHistorySuccess } from '../redux/history/actions';
 import { canPieceMoveToNewCell } from '../utils/helpers';
 
@@ -32,7 +32,7 @@ class GameBoard extends Component {
   }
 
   resetBoard() {
-    console.log("I am in the right spot");
+    this.props.resetBoard();
     this.props.resetMessageState();
   }
 
@@ -116,6 +116,7 @@ const mapdDispatchToProps = (dispatch) => {
     updateMessageSuccess: updateMessageSuccess,
     resetMessageState: resetMessageState,
     moveSuccess: moveSuccess,
+    resetBoard: resetBoard,
     addHistorySuccess: addHistorySuccess,
   }, dispatch);
 }
