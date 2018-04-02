@@ -25,18 +25,21 @@ class GameBoard extends Component {
   handleCellClick = (e, cell) => {
     let message = ""
     const { readyToMove, pieceToMove } = this.state
-    const { updateMessageSuccess } = this.props
+    const { updateMessageSuccess, board } = this.props
 
     if ((readyToMove === 'no' && cell.piece !== "") || cell.piece !== "") {
       message = `You have chosen the ${cell.pieceColor} ${cell.piece} in cell ${cell.space}.`
       updateMessageSuccess(message)
       this.setState({
+        ...this.state,
         selectedCell: cell.id,
         readyToMove: 'yes',
-        pieceToMove: cell
+        pieceToMove: cell,
+        errorMoveCell: 0,
+        successfullMoveCell: 0,
       })
     } else if (readyToMove === 'yes') {
-      if (canPieceMoveToNewCell(pieceToMove.piece, pieceToMove, cell)) {
+      if (canPieceMoveToNewCell(board, pieceToMove.piece, pieceToMove, cell)) {
         // dispatch to board to move piece
         this.props.moveSuccess(pieceToMove.piece, pieceToMove, cell)
         
@@ -51,7 +54,8 @@ class GameBoard extends Component {
           ...this.state,
           selectedCell: "",
           readyToMove: 'no',
-          pieceToMove: null
+          pieceToMove: null,
+          successfullMoveCell: cell.id
         })
       } else {
         // dispatch to message to display that an invalid move was attempted
@@ -70,11 +74,11 @@ class GameBoard extends Component {
 
   render() {
     const { board } = this.props
-    const { selectedCell, errorMoveCell } = this.state
-    console.log(errorMoveCell)
+    const { selectedCell, errorMoveCell, successfullMoveCell } = this.state
+    
     return(
       <div className="board">
-        {board.length && board.map(space => <BoardSpace key={space.id} space={space} selected={(selectedCell === space.id) ? "selected" : ""} flashError={(errorMoveCell === space.id) ? "flashError" : ""} handleCellClick={(e, cell) => this.handleCellClick(e, cell)} />)}
+        {board.length && board.map(space => <BoardSpace key={space.id} space={space} selected={(selectedCell === space.id) ? "selected" : ""} flashSuccess={(successfullMoveCell === space.id) ? "flashSuccess" : ""} flashError={(errorMoveCell === space.id) ? "flashError" : ""} handleCellClick={(e, cell) => this.handleCellClick(e, cell)} />)}
       </div>
     )
   }
