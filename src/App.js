@@ -3,6 +3,7 @@ import './App.css';
 
 import GameBoard from './components/gameBoard';
 import Message from './components/message';
+import History from './components/history';
 
 class App extends Component {
   render() {
@@ -19,6 +20,7 @@ class App extends Component {
           </div>
           <div className="right">
             <section className="history">
+              <History />
             </section>
             <section className="messages">
               <Message />
