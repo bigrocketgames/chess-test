@@ -1,10 +1,10 @@
 export const canPieceMoveToNewCell = (piece, currentCell, newCell) => {
   switch(piece) {
-    case "bishop":
+    case "Bishop":
       // implement logic to check if valid move
       return true;
 
-    case "knight":
+    case "Knight":
       // implement logic to check if valid move
       return true;
 
