@@ -28,6 +28,13 @@ class GameBoard extends Component {
     this.props.resetBoard();
     this.props.resetHistory();
     this.props.resetMessageState();
+    this.setState({
+      selectedCell: 0,
+      readyToMove: 'no',
+      cellMoveFrom: null,
+      errorMoveCell: 0,
+      successfullMoveCell: 0
+    })
   }
 
   handleCellClick = (e, cell) => {
