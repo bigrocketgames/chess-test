@@ -44,16 +44,6 @@
   background-color: lime;
 }
 
-.knightwhite {
-  background: center / contain no-repeat url("./images/knight_white.png");
-  animation: 1s fadeIn;
-}
-
-.bishopwhite {
-  background: center / contain no-repeat url("./images/bishop_white.png");
-  animation: 1s fadeIn;
-}
-
 .nameDiv {
   position: relative;
   width: 95px;
@@ -68,8 +58,29 @@ p.spaceName {
   text-align: right;
 }
 
+/* Animations */
+.knightwhite {
+  background: center / contain no-repeat url("./images/knight_white.png");
+  animation: 1s fadeIn;
+}
+
+.bishopwhite {
+  background: center / contain no-repeat url("./images/bishop_white.png");
+  animation: 1s fadeIn;
+}
+
+.flashError {
+  animation: 0.1s ease-in 0s 3 reverse flashErr;
+}
+
 /* fade-in animation for chess pieces */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* animation to flash for error */
+@keyframes flashErr {
+  from { background-color: red; }
+  to { background-color: transparent; }
 }
