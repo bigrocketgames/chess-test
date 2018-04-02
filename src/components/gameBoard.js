@@ -26,6 +26,7 @@ class GameBoard extends Component {
     this.resetBoard = this.resetBoard.bind(this)
   }
 
+  // reset the board to the beginning game state
   resetBoard() {
     this.props.resetBoard();
     this.props.resetHistory();
@@ -44,7 +45,8 @@ class GameBoard extends Component {
     const { readyToMove, pieceToMove } = this.state
     const { updateMessageSuccess, addHistorySuccess, board } = this.props
 
-    if ((readyToMove === 'no' && cell.piece !== "") || cell.piece !== "") {
+    // Select the space if it isn't empty.
+    if (cell.piece !== "") {
       message = `You have chosen the ${cell.pieceColor} ${cell.piece} in cell ${cell.space}.`
       updateMessageSuccess(message)
       this.setState({
@@ -100,6 +102,7 @@ class GameBoard extends Component {
     return(
       <div className="board-container">
         <div className="board">
+          {/* map through the spaces to create the playing space */}
           {board.length && board.map(space => <BoardSpace key={space.id} space={space} selected={(selectedCell === space.id) ? "selected" : ""} flashSuccess={(successfullMoveCell === space.id) ? "flashSuccess" : ""} flashError={(errorMoveCell === space.id) ? "flashError" : ""} handleCellClick={(e, cell) => this.handleCellClick(e, cell)} />)}
         </div>
         <Button classes="reset-btn" handleClick={this.resetBoard} />
