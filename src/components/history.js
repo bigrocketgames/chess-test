@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { HistoryMessages } from '../containers/historyMessages';
+import { rewindBoard } from '../redux/board/actions';
+// need to add action and reducer for rewinding history - add action to mapDispatchToProps
 
 class History extends Component {
 
@@ -17,6 +20,7 @@ class History extends Component {
 
   render() {
     const { history } = this.props
+    const prevBoard = history[history.length-1]
     
     return(
       <div>
@@ -40,4 +44,10 @@ const mapStateToProps = (state) => {
   })
 }
 
-export default connect(mapStateToProps)(History);
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    rewindBoard: rewindBoard
+  })
+}
+
+export default connect((mapStateToProps), mapDispatchToProps)(History);
