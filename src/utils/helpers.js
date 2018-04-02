@@ -35,7 +35,7 @@ const validKnightMove = (currentCell, newCell) => {
 }
 
 const isBishopBlocked = (board, currentCell, newCell) => {
-  
+  // find differences between current and new row and current and new cell - initiate checkCell variable
   const rowNum = currentCell.row - newCell.row
   const cellNum = currentCell.cell - newCell.cell
   let checkCell = null
