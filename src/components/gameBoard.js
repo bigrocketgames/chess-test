@@ -22,9 +22,9 @@ class GameBoard extends Component {
 
   handleCellClick = (e, cell) => {
     let message = ""
-    const { readyToMove } = this.state
+    const { readyToMove, pieceToMove } = this.state
 
-    if (readyToMove === 'no' || cell.piece !== "") {
+    if ((readyToMove === 'no' && cell.piece !== "") || cell.piece !== "") {
       message = `You have chosen the ${cell.pieceColor} ${cell.piece} in cell ${cell.space}.`
       this.props.updateMessageSuccess(message)
       this.setState({
@@ -33,12 +33,23 @@ class GameBoard extends Component {
         pieceToMove: cell
       })
     } else if (readyToMove === 'yes') {
-      if (canPieceMoveToNewCell(this.state.pieceToMove.piece, this.state.pieceToMove, cell)) {
+      if (canPieceMoveToNewCell(pieceToMove.piece, pieceToMove, cell)) {
         // dispatch to board to move piece
-        this.props.moveSuccess(this.state.pieceToMove.piece, this.state.pieceToMove, cell)
+        this.props.moveSuccess(pieceToMove.piece, pieceToMove, cell)
+        
         // dispatch to message to display that a move was made
+        message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!`
+        this.props.updateMessageSuccess(message)
+        
         // dispatch to history to update history with move
+        
         // reset local state to get ready for next move
+        this.setState({
+          ...this.state,
+          selectedCell: "",
+          readyToMove: 'no',
+          pieceToMove: null
+        })
       }
     }
   }
@@ -46,6 +57,7 @@ class GameBoard extends Component {
   render() {
     const { board } = this.props
     const { selectedCell } = this.state
+    console.log(board)
     return(
       <div className="board">
         {board.length && board.map(space => <BoardSpace key={space.id} space={space} selected={(selectedCell === space.id) ? "selected" : ""} handleCellClick={(e, cell) => this.handleCellClick(e, cell)} />)}
