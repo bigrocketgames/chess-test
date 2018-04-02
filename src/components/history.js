@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 import { HistoryMessages } from '../containers/historyMessages';
 
@@ -16,6 +17,7 @@ class History extends Component {
 
   render() {
     const { history } = this.props
+    
     return(
       <div>
         <h2 className="history-title">Previous Moves</h2>
@@ -26,6 +28,10 @@ class History extends Component {
       </div>
     )
   }
+}
+
+History.propTypes={
+  history: PropTypes.array
 }
 
 const mapStateToProps = (state) => {

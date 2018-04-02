@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export const BoardSpace = (props) => {
   const { space, selected, handleCellClick, flashError, flashSuccess } = props
@@ -10,4 +11,12 @@ export const BoardSpace = (props) => {
       </div>
     </div>
   )
+}
+
+BoardSpace.propTypes = {
+  space: PropTypes.object,
+  selected: PropTypes.string,
+  handleCellClick: PropTypes.func,
+  flashError: PropTypes.string,
+  flashSuccess: PropTypes.string
 }

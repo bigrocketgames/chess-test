@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export const HistoryMessages = (props) => {
   const { move } = props
@@ -8,4 +9,8 @@ export const HistoryMessages = (props) => {
       <hr/>
     </div>
   )
+}
+
+HistoryMessages.propTypes = {
+  move: PropTypes.object
 }

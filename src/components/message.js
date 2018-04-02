@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 class Message extends Component {
 
@@ -11,6 +12,10 @@ class Message extends Component {
       </div>
     )
   }
+}
+
+Message.propTypes = {
+  message: PropTypes.string
 }
 
 const mapStateToProps = (state) => {

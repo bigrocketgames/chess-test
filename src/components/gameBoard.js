@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import { BoardSpace } from '../containers/boardSpace';
 import { updateMessageSuccess, resetMessageState } from '../redux/message/actions';
@@ -104,6 +105,16 @@ class GameBoard extends Component {
       </div>
     )
   }
+}
+
+GameBoard.propTypes = {
+  board: PropTypes.array,
+  updateMessageSuccess: PropTypes.func,
+  resetMessageState: PropTypes.func,
+  moveSuccess: PropTypes.func,
+  resetBoard: PropTypes.func,
+  addHistorySuccess: PropTypes.func,
+  resetHistory: PropTypes.func
 }
 
 const mapStateToProps = (state) => {
