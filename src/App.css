@@ -73,6 +73,10 @@ p.spaceName {
   animation: 0.1s ease-in 0s 3 reverse flashErr;
 }
 
+.flashSuccess {
+  animation: 0.1s 3 reverse flashYes
+}
+
 /* fade-in animation for chess pieces */
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -82,5 +86,11 @@ p.spaceName {
 /* animation to flash for error */
 @keyframes flashErr {
   from { background-color: red; }
+  to { background-color: transparent; }
+}
+
+/* animation to flash for successful move */
+@keyframes flashYes {
+  from { background-color: lime; }
   to { background-color: transparent; }
 }
