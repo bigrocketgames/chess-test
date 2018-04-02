@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { BoardSpace } from '../containers/boardSpace';
-import { updateMessageSuccess } from '../redux/message/actions';
+import { updateMessageSuccess, resetMessageState } from '../redux/message/actions';
 import { moveSuccess } from '../redux/board/actions';
 import { addHistorySuccess } from '../redux/history/actions';
 import { canPieceMoveToNewCell } from '../utils/helpers';
@@ -33,6 +33,7 @@ class GameBoard extends Component {
 
   resetBoard() {
     console.log("I am in the right spot");
+    this.props.resetMessageState();
   }
 
   handleCellClick = (e, cell) => {
@@ -113,6 +114,7 @@ const mapStateToProps = (state) => {
 const mapdDispatchToProps = (dispatch) => {
   return bindActionCreators({
     updateMessageSuccess: updateMessageSuccess,
+    resetMessageState: resetMessageState,
     moveSuccess: moveSuccess,
     addHistorySuccess: addHistorySuccess,
   }, dispatch);
