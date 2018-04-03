@@ -86,6 +86,16 @@ p.spaceName {
   animation: 1s fadeIn;
 }
 
+.knightblack {
+  background: center / contain no-repeat url("./images/knight_black.png");
+  animation: 1s fadeIn;
+}
+
+.bishopblack {
+  background: center / contain no-repeat url("./images/bishop_black.png");
+  animation: 1s fadeIn;
+}
+
 .flashError {
   animation: 0.1s ease-in 0s 3 reverse flashErr;
 }
