@@ -16,8 +16,8 @@ class History extends Component {
     this.undoMoveOnClick = this.undoMoveOnClick.bind(this)
   }
 
-  undoMoveOnClick(lastBoard){
-    this.props.rewindBoard(lastBoard);
+  undoMoveOnClick(lastGameState){
+    this.props.rewindBoard(lastGameState);
     this.props.rewindHistory();
     const message = "You have undone that move."
     this.props.updateMessageSuccess(message);
@@ -34,7 +34,7 @@ class History extends Component {
 
   render() {
     const { history } = this.props
-    const prevBoard = history[history.length-1].board
+    const prevGameState = history[history.length-1].gameState
     
     return(
       <div>
@@ -43,7 +43,7 @@ class History extends Component {
           { history.length && history.map(history => <HistoryMessages key={history.id} move={history} />)}
           <div ref={(el) => { this.messagesEnd = el; }}></div>
         </div>
-        {history.length > 1 && <Button classes="rewind-btn" handleClick={() => this.undoMoveOnClick(prevBoard)} label="Undo Move" />}
+        {history.length > 1 && <Button classes="rewind-btn" handleClick={() => this.undoMoveOnClick(prevGameState)} label="Undo Move" />}
       </div>
     )
   }
