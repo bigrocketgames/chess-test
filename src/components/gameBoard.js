@@ -46,7 +46,7 @@ class GameBoard extends Component {
     const { updateMessageSuccess, addHistorySuccess, game } = this.props
 
     // Select the space if it isn't empty.
-    if (cell.piece !== "") {
+    if (cell.piece !== "" && cell.pieceColor === game.turnColor) {
       message = `You have chosen the ${cell.pieceColor} ${cell.piece} in cell ${cell.space}.`
       updateMessageSuccess(message)
       this.setState({

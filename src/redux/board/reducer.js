@@ -21,26 +21,40 @@ const initialState = { board: [
 export default (state = initialState, action) => {
   switch(action.type) {
     case MOVE_SUCCESS:
-      const oldCellIndex = state.findIndex(cell => cell.id === action.oldCell.id)
-      const newCellIndex = state.findIndex(cell => cell.id === action.newCell.id)
+      // determine who's turn is next
+      const nextColor = state.turnColor === "White" ? "Black" : "White"
+
+      // find the old and new cells and update them
+      const oldCellIndex = state.board.findIndex(cell => cell.id === action.oldCell.id)
+      const newCellIndex = state.board.findIndex(cell => cell.id === action.newCell.id)
       const updatedOldCell = {...action.oldCell, piece: "", pieceColor: "", value: ""}
       const updatedNewCell = {...action.newCell, piece: action.oldCell.piece, pieceColor: action.oldCell.pieceColor, value: action.oldCell.value}
+
+      // update state depending on whether the newer or older cell had the higher index so they input in the correct order
       if (oldCellIndex > newCellIndex) {
-        return [
-          ...state.slice(0, newCellIndex),
+        return {
+          ...state,
+          board: [
+          ...state.board.slice(0, newCellIndex),
           updatedNewCell,
-          ...state.slice(newCellIndex + 1, oldCellIndex),
+          ...state.board.slice(newCellIndex + 1, oldCellIndex),
           updatedOldCell,
-          ...state.slice(oldCellIndex + 1)
-        ]
+          ...state.board.slice(oldCellIndex + 1)
+          ], 
+          turnColor: nextColor 
+        }
       } else {
-        return [
-          ...state.slice(0, oldCellIndex),
+        return {
+          ...state,
+          board: [
+          ...state.board.slice(0, oldCellIndex),
           updatedOldCell,
-          ...state.slice(oldCellIndex + 1, newCellIndex),
+          ...state.board.slice(oldCellIndex + 1, newCellIndex),
           updatedNewCell,
-          ...state.slice(newCellIndex + 1)
-        ]
+          ...state.board.slice(newCellIndex + 1)
+          ],
+          turnColor: nextColor
+        }
       }
 
     case RESET_BOARD_SUCCESS:
