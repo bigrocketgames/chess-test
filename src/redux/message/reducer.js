@@ -1,6 +1,6 @@
 import { UPDATE_MESSAGE_SUCCESS, RESET_MESSAGE_STATE } from './actions';
 
-const initialState = "Please select a piece to move."
+const initialState = "White goes first."
 
 export default(state = initialState, action) => {
   switch(action.type) {
