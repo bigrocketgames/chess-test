@@ -13,7 +13,7 @@ This is just a project with a simple 8x8 chessboard and a knight and bishop to m
 - Game state tracked with redux and local state.
 - You can find this project live on Heroku [here](https://chess-test.herokuapp.com).
 
-chess pieces by Buch.  You can find them [here](https://opengameart.org/content/chess-pieces-set).  Used under the CC-by 3.0 license.
+chess pieces by Buch.  You can find them [here](https://opengameart.org/content/chess-pieces-set).  Used under the CC-by 3.0 license which can be viewed [here](https://creativecommons.org/licenses/by/3.0/).
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
