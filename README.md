@@ -5,7 +5,7 @@ This is just a project with a simple 8x8 chessboard and a knight and bishop to m
 ## To run the project:
 - simply clone or fork the repo onto your own machine
 - run 'yarn install' or 'npm install' to get all of the dependencies installed
-- run 'yarn start' or 'npm start' to start the local development
+- run 'yarn start' or 'npm start' to start the app on your local machine
 
 ### Features of this project:
 - Black and white knights and bishops doing battle.
