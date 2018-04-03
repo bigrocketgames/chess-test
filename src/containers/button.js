@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 export const Button = (props) => {
   const {handleClick, classes, label} = props
 
+  // return the button based on the given props
   return(
     <button className={`${classes}`} onClick={handleClick}>{label}</button>
   )

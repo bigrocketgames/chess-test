@@ -26,6 +26,7 @@ class GameBoard extends Component {
     this.resetBoard = this.resetBoard.bind(this)
   }
 
+  // check to see if history has been rewinded and clear local state to be ready to select a fresh piece
   componentDidUpdate(prevProps, prevState) {
     if (this.props.history.length < prevProps.history.length && this.state.selectedCell !== 0){
       this.setState({
@@ -52,6 +53,7 @@ class GameBoard extends Component {
     })
   }
 
+  // dispatches to update various pieces of state
   successfulMoveUpdate = (piece, pieceToMove, cell, message, history) => {
     // dispatch to board to move piece
     this.props.moveSuccess(pieceToMove.piece, pieceToMove, cell)

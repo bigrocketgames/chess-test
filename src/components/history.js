@@ -50,7 +50,10 @@ class History extends Component {
 }
 
 History.propTypes={
-  history: PropTypes.array
+  history: PropTypes.array,
+  rewindBoard: PropTypes.func,
+  rewindHistory: PropTypes.func,
+  updateMessageSuccess: PropTypes.func
 }
 
 const mapStateToProps = (state) => {
