@@ -16,6 +16,15 @@ export const canPieceMoveToNewCell = (board, piece, currentCell, newCell) => {
   }
 }
 
+export const gameWon = (board, capturedColor, newCell) => {
+  const piecesLeft = board.findIndex(cell => (cell.pieceColor === capturedColor))
+  if (piecesLeft === -1) {
+    return false
+  } else {
+    return true
+  }
+}
+
 const validBishopMove = (currentCell, newCell) => {
   return Math.abs(currentCell.row - newCell.row) === Math.abs(currentCell.cell - newCell.cell);
 }
@@ -41,7 +50,7 @@ const isBishopBlocked = (board, currentCell, newCell) => {
   let checkCell = null
 
   if (rowNum > 0) {
-    for(let i = 1; i <= rowNum; i++) {
+    for(let i = 1; i < rowNum; i++) {
       if (cellNum > 0) {
         checkCell = board.find(function(e) {
           return ((e.row === currentCell.row - i) && (e.cell === currentCell.cell - i))
@@ -58,7 +67,7 @@ const isBishopBlocked = (board, currentCell, newCell) => {
       }
     }
   } else {
-    for(let i = -1; i >= rowNum; i--){
+    for(let i = -1; i > rowNum; i--){
       if (cellNum > 0) {
         checkCell = board.find(function(e) {
           return ((e.row === currentCell.row - i) && (e.cell === currentCell.cell + i))

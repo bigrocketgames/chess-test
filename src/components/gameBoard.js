@@ -8,7 +8,7 @@ import { Button } from '../containers/button';
 import { updateMessageSuccess, resetMessageState } from '../redux/message/actions';
 import { moveSuccess, resetBoard } from '../redux/board/actions';
 import { addHistorySuccess, resetHistory } from '../redux/history/actions';
-import { canPieceMoveToNewCell } from '../utils/helpers';
+import { canPieceMoveToNewCell, gameWon } from '../utils/helpers';
 
 class GameBoard extends Component {
   constructor(props) {
@@ -26,6 +26,18 @@ class GameBoard extends Component {
     this.resetBoard = this.resetBoard.bind(this)
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.history.length < prevProps.history.length && this.state.selectedCell !== 0){
+      this.setState({
+        selectedCell: 0,
+        readyToMove: 'no',
+        cellMoveFrom: null,
+        errorMoveCell: 0,
+        successfullMoveCell: 0
+      })
+    }
+  }
+
   // reset the board to the beginning game state
   resetBoard() {
     this.props.resetBoard();
@@ -40,13 +52,35 @@ class GameBoard extends Component {
     })
   }
 
+  successfulMoveUpdate = (piece, pieceToMove, cell, message, history) => {
+    // dispatch to board to move piece
+    this.props.moveSuccess(pieceToMove.piece, pieceToMove, cell)
+          
+    // dispatch to message to display that a move was made
+    this.props.updateMessageSuccess(message)
+    
+    // dispatch to history to update history with move
+    this.props.addHistorySuccess(history)
+
+    // reset local state to get ready for next move
+    this.setState({
+      ...this.state,
+      selectedCell: 0,
+      readyToMove: 'no',
+      pieceToMove: null,
+      successfullMoveCell: cell.id
+    })
+  }
+
   handleCellClick = (e, cell) => {
     let message = ""
+    let pastGameState = null
+    let history = null
     const { readyToMove, pieceToMove } = this.state
-    const { updateMessageSuccess, addHistorySuccess, game } = this.props
+    const { updateMessageSuccess, gameState } = this.props
 
     // Select the space if it isn't empty.
-    if (cell.piece !== "" && cell.pieceColor === game.turnColor) {
+    if (cell.piece !== "" && cell.pieceColor === gameState.turnColor) {
       message = `You have chosen the ${cell.pieceColor} ${cell.piece} in cell ${cell.space}.`
       updateMessageSuccess(message)
       this.setState({
@@ -58,52 +92,60 @@ class GameBoard extends Component {
         successfullMoveCell: 0,
       })
     } else if (readyToMove === 'yes') {
-      if (canPieceMoveToNewCell(game.board, pieceToMove.piece, pieceToMove, cell)) {
-        const pastBoard = game.board;
+      console.log(cell)
+      if (cell.pieceColor !== pieceToMove.pieceColor && cell.pieceColor !== "") {
+        if (canPieceMoveToNewCell(gameState.board, pieceToMove.piece, pieceToMove, cell)) {
 
-        // dispatch to board to move piece
-        this.props.moveSuccess(pieceToMove.piece, pieceToMove, cell)
-        
-        // dispatch to message to display that a move was made
-        message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!`
-        updateMessageSuccess(message)
-        
-        // dispatch to history to update history with move
-        const historyMessage = `Moved ${pieceToMove.pieceColor} ${pieceToMove.piece} from cell ${pieceToMove.space} to cell ${cell.space}`
-        const history = {board: pastBoard, message: historyMessage}
-        addHistorySuccess(history)
+          // check if game is won and return results as necessary
+          if (gameWon(gameState.board, cell.pieceColor, cell)) {
+            pastGameState = gameState;
+            message = `You have captured the ${cell.pieceColor} ${cell.piece} in cell ${cell.space} with your ${pieceToMove.pieceColor} ${pieceToMove.piece}!  ${pieceToMove.pieceColor} WINS!`
+            const historyMessage = `Captured the ${cell.pieceColor} ${cell.piece} in cell ${cell.space} with the ${pieceToMove.pieceColor} ${pieceToMove.piece} from cell ${pieceToMove.space} to win!`
+            history = {gameState: pastGameState, message: historyMessage}
+          } else {
+            pastGameState = gameState;
+            message = `You have captured the ${cell.pieceColor} ${cell.piece} in cell ${cell.space} with your ${pieceToMove.pieceColor} ${pieceToMove.piece}!`
+            const historyMessage = `Captured the ${cell.pieceColor} ${cell.piece} in cell ${cell.space} with the ${pieceToMove.pieceColor} ${pieceToMove.piece} from cell ${pieceToMove.space}`
+            history = {gameState: pastGameState, message: historyMessage}
+          }
 
-        // reset local state to get ready for next move
-        this.setState({
-          ...this.state,
-          selectedCell: "",
-          readyToMove: 'no',
-          pieceToMove: null,
-          successfullMoveCell: cell.id
-        })
-      } else {
-        // dispatch to message to display that an invalid move was attempted
-        message = `You can not move ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!`
-        updateMessageSuccess(message)
+          this.successfulMoveUpdate(pieceToMove.piece, pieceToMove, cell, message, history);
 
-        // Set local state for to show which cell was erroneously attempted to move to
-        this.setState({
-          ...this.state,
-          errorMoveCell: cell.id
-        })
+        }
+      } else if (cell.pieceColor === "") {
+
+        if (canPieceMoveToNewCell(gameState.board, pieceToMove.piece, pieceToMove, cell)) {
+          pastGameState = gameState;
+          message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!`
+          const historyMessage = `Moved ${pieceToMove.pieceColor} ${pieceToMove.piece} from cell ${pieceToMove.space} to cell ${cell.space}`
+          const history = {gameState: pastGameState, message: historyMessage}
+
+          this.successfulMoveUpdate(pieceToMove.piece, pieceToMove, cell, message, history);
+          
+        } else {
+          // dispatch to message to display that an invalid move was attempted
+          message = `You can not move ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!`
+          updateMessageSuccess(message)
+  
+          // Set local state for to show which cell was erroneously attempted to move to
+          this.setState({
+            ...this.state,
+            errorMoveCell: cell.id
+          })
+        }
       }
     }
   }
 
   render() {
-    const { game } = this.props
+    const { gameState } = this.props
     const { selectedCell, errorMoveCell, successfullMoveCell } = this.state
     
     return(
       <div className="board-container">
         <div className="board">
           {/* map through the spaces to create the playing space */}
-          {game.board.length && game.board.map(space => <BoardSpace key={space.id} space={space} selected={(selectedCell === space.id) ? "selected" : ""} flashSuccess={(successfullMoveCell === space.id) ? "flashSuccess" : ""} flashError={(errorMoveCell === space.id) ? "flashError" : ""} handleCellClick={(e, cell) => this.handleCellClick(e, cell)} />)}
+          {gameState.board.length && gameState.board.map(space => <BoardSpace key={space.id} space={space} selected={(selectedCell === space.id) ? "selected" : ""} flashSuccess={(successfullMoveCell === space.id) ? "flashSuccess" : ""} flashError={(errorMoveCell === space.id) ? "flashError" : ""} handleCellClick={(e, cell) => this.handleCellClick(e, cell)} />)}
         </div>
         <Button classes="reset-btn" handleClick={this.resetBoard} label="Reset Board" />
       </div>
@@ -112,7 +154,8 @@ class GameBoard extends Component {
 }
 
 GameBoard.propTypes = {
-  game: PropTypes.object,
+  gameState: PropTypes.object,
+  history: PropTypes.array,
   updateMessageSuccess: PropTypes.func,
   resetMessageState: PropTypes.func,
   moveSuccess: PropTypes.func,
@@ -123,7 +166,8 @@ GameBoard.propTypes = {
 
 const mapStateToProps = (state) => {
   return({
-    game: state.board
+    gameState: state.board,
+    history: state.history
   })
 }
 
