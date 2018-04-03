@@ -43,7 +43,7 @@ class GameBoard extends Component {
   handleCellClick = (e, cell) => {
     let message = ""
     const { readyToMove, pieceToMove } = this.state
-    const { updateMessageSuccess, addHistorySuccess, board } = this.props
+    const { updateMessageSuccess, addHistorySuccess, game } = this.props
 
     // Select the space if it isn't empty.
     if (cell.piece !== "") {
@@ -58,8 +58,8 @@ class GameBoard extends Component {
         successfullMoveCell: 0,
       })
     } else if (readyToMove === 'yes') {
-      if (canPieceMoveToNewCell(board, pieceToMove.piece, pieceToMove, cell)) {
-        const pastBoard = board;
+      if (canPieceMoveToNewCell(game.board, pieceToMove.piece, pieceToMove, cell)) {
+        const pastBoard = game.board;
 
         // dispatch to board to move piece
         this.props.moveSuccess(pieceToMove.piece, pieceToMove, cell)
@@ -96,14 +96,14 @@ class GameBoard extends Component {
   }
 
   render() {
-    const { board } = this.props
+    const { game } = this.props
     const { selectedCell, errorMoveCell, successfullMoveCell } = this.state
     
     return(
       <div className="board-container">
         <div className="board">
           {/* map through the spaces to create the playing space */}
-          {board.length && board.map(space => <BoardSpace key={space.id} space={space} selected={(selectedCell === space.id) ? "selected" : ""} flashSuccess={(successfullMoveCell === space.id) ? "flashSuccess" : ""} flashError={(errorMoveCell === space.id) ? "flashError" : ""} handleCellClick={(e, cell) => this.handleCellClick(e, cell)} />)}
+          {game.board.length && game.board.map(space => <BoardSpace key={space.id} space={space} selected={(selectedCell === space.id) ? "selected" : ""} flashSuccess={(successfullMoveCell === space.id) ? "flashSuccess" : ""} flashError={(errorMoveCell === space.id) ? "flashError" : ""} handleCellClick={(e, cell) => this.handleCellClick(e, cell)} />)}
         </div>
         <Button classes="reset-btn" handleClick={this.resetBoard} label="Reset Board" />
       </div>
@@ -112,7 +112,7 @@ class GameBoard extends Component {
 }
 
 GameBoard.propTypes = {
-  board: PropTypes.array,
+  game: PropTypes.object,
   updateMessageSuccess: PropTypes.func,
   resetMessageState: PropTypes.func,
   moveSuccess: PropTypes.func,
@@ -123,7 +123,7 @@ GameBoard.propTypes = {
 
 const mapStateToProps = (state) => {
   return({
-    board: state.board
+    game: state.board
   })
 }
 
