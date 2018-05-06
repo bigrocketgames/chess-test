@@ -11,6 +11,17 @@ export const canPieceMoveToNewCell = (board, piece, currentCell, newCell) => {
       // implement logic to check if valid move
       return validKnightMove(currentCell, newCell);
 
+    case "Pawn":
+      // returns true or false to confirm if move can be made or not
+      if(!pawnCapture(currentCell, newCell)) {
+        if(validPawnMove(currentCell, newCell)) {
+          return !isPawnBlocked(board, currentCell, newCell)
+        }
+      } else {
+        return true
+      }
+      return false;
+
     default:
       return false
   }
@@ -25,6 +36,67 @@ export const gameWon = (board, capturedColor, newCell) => {
   } else {
     return false
   }
+}
+
+const pawnCapture = (currentCell, newCell) => {
+  // check for possible capture
+  if (newCell.pieceColor !== currentCell.pieceColor && newCell.pieceColor !== "") {
+    if (currentCell.pieceColor === "Black") {
+      return (currentCell.row - newCell.row === -1) && Math.abs(currentCell.cell - newCell.cell) === 1
+    } else {
+      return (currentCell.row - newCell.row === 1) && Math.abs(currentCell.cell - newCell.cell) === 1
+    }
+  }
+  return false
+}
+
+const validPawnMove = (currentCell, newCell) => {
+  if (currentCell.pieceColor === "Black") {
+    if (currentCell.row === 2) {
+      // pawns may move 2 spaces on first move only
+      return ((0 < newCell.row - currentCell.row < 3) && currentCell.cell === newCell.cell)
+    } else {
+      return (newCell.row - currentCell.row === 1 && currentCell.cell === newCell.cell)
+    }
+  } else if (currentCell.pieceColor === "White") {
+    if (currentCell.row === 7) {
+      // pawns may move 2 spaces on first move only
+      return ((0 < currentCell.row - newCell.row < 3) && currentCell.cell === newCell.cell)
+    } else {
+      return (currentCell.row - newCell.row === 1 && currentCell.cell === newCell.cell)
+    }
+  } 
+}
+
+const isPawnBlocked = (board, currentCell, newCell) => {
+  const numOfMoves = currentCell.row - newCell.row
+  let checkCell = null
+
+  if (numOfMoves > 0) {
+    for(let i = 1; i <= numOfMoves; i++) {
+      checkCell = board.find(function(e) {
+        return ((e.row === currentCell.row - i) && (e.cell === currentCell.cell))
+      })
+
+      // check if next cell is currently occupied
+      if (checkCell.value !== "") {
+        return true
+      }
+    }
+  } else {
+    for(let i = -1; i >= numOfMoves; i--) {
+      checkCell = board.find(function(e) {
+        return ((e.row === currentCell.row - i) && (e.cell === currentCell.cell))
+      })
+      
+      // check if next cell is currently occupied
+      if (checkCell.value !== "") {
+        return true
+      }
+    }
+  }
+
+  return false;
 }
 
 const validBishopMove = (currentCell, newCell) => {
