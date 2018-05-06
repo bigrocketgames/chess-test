@@ -76,13 +76,18 @@ p.spaceName {
 }
 
 /* Animations */
-.knightwhite {
-  background: center / contain no-repeat url("./images/knight_white.png");
+.rookwhite {
+  background: center / contain no-repeat url("./images/rook_white.png");
   animation: 1s fadeIn;
 }
 
-.bishopwhite {
-  background: center / contain no-repeat url("./images/bishop_white.png");
+.rookblack {
+  background: center / contain no-repeat url("./images/rook_black.png");
+  animation: 1s fadeIn;
+}
+
+.knightwhite {
+  background: center / contain no-repeat url("./images/knight_white.png");
   animation: 1s fadeIn;
 }
 
@@ -91,8 +96,43 @@ p.spaceName {
   animation: 1s fadeIn;
 }
 
+.bishopwhite {
+  background: center / contain no-repeat url("./images/bishop_white.png");
+  animation: 1s fadeIn;
+}
+
 .bishopblack {
   background: center / contain no-repeat url("./images/bishop_black.png");
+  animation: 1s fadeIn;
+}
+
+.queenwhite {
+  background: center / contain no-repeat url("./images/queen_white.png");
+  animation: 1s fadeIn;
+}
+
+.queenblack {
+  background: center / contain no-repeat url("./images/queen_black.png");
+  animation: 1s fadeIn;
+}
+
+.kingwhite {
+  background: center / contain no-repeat url("./images/king_white.png");
+  animation: 1s fadeIn;
+}
+
+.kingblack {
+  background: center / contain no-repeat url("./images/king_black.png");
+  animation: 1s fadeIn;
+}
+
+.pawnwhite {
+  background: center / contain no-repeat url("./images/pawn_white.png");
+  animation: 1s fadeIn;
+}
+
+.pawnblack {
+  background: center / contain no-repeat url("./images/pawn_black.png");
   animation: 1s fadeIn;
 }
 
