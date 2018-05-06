@@ -22,6 +22,13 @@ export const canPieceMoveToNewCell = (board, piece, currentCell, newCell) => {
       }
       return false;
 
+    case "Rook":
+      // returns true or false to confirm if move by Rook can be made or not
+      if(validRookMove(currentCell, newCell)) {
+        return !isRookBlocked(board, currentCell, newCell);
+      }
+      return false;
+
     default:
       return false
   }
@@ -68,35 +75,8 @@ const validPawnMove = (currentCell, newCell) => {
   } 
 }
 
-const isPawnBlocked = (board, currentCell, newCell) => {
-  const numOfMoves = currentCell.row - newCell.row
-  let checkCell = null
-
-  if (numOfMoves > 0) {
-    for(let i = 1; i <= numOfMoves; i++) {
-      checkCell = board.find(function(e) {
-        return ((e.row === currentCell.row - i) && (e.cell === currentCell.cell))
-      })
-
-      // check if next cell is currently occupied
-      if (checkCell.value !== "") {
-        return true
-      }
-    }
-  } else {
-    for(let i = -1; i >= numOfMoves; i--) {
-      checkCell = board.find(function(e) {
-        return ((e.row === currentCell.row - i) && (e.cell === currentCell.cell))
-      })
-      
-      // check if next cell is currently occupied
-      if (checkCell.value !== "") {
-        return true
-      }
-    }
-  }
-
-  return false;
+const validRookMove = (currentCell, newCell) => {
+  return (Math.abs(currentCell.row - newCell.row) > 0 && currentCell.cell - newCell.cell === 0) || (Math.abs(currentCell.cell - newCell.cell) > 0 && currentCell.row - newCell.row === 0)
 }
 
 const validBishopMove = (currentCell, newCell) => {
@@ -160,5 +140,96 @@ const isBishopBlocked = (board, currentCell, newCell) => {
   }
 
   // if the bishop is not blocked return false
+  return false
+}
+
+const isPawnBlocked = (board, currentCell, newCell) => {
+  const numOfMoves = currentCell.row - newCell.row
+  let checkCell = null
+
+  if (numOfMoves > 0) {
+    for(let i = 1; i <= numOfMoves; i++) {
+      checkCell = board.find(function(e) {
+        return ((e.row === currentCell.row - i) && (e.cell === currentCell.cell))
+      })
+
+      // check if next cell is currently occupied
+      if (checkCell.value !== "") {
+        return true
+      }
+    }
+  } else {
+    for(let i = -1; i >= numOfMoves; i--) {
+      checkCell = board.find(function(e) {
+        return ((e.row === currentCell.row - i) && (e.cell === currentCell.cell))
+      })
+      
+      // check if next cell is currently occupied
+      if (checkCell.value !== "") {
+        return true
+      }
+    }
+  }
+
+  return false;
+}
+
+const isRookBlocked = (board, currentCell, newCell) => {
+  const vertMove = currentCell.row - newCell.row
+  const horMove = currentCell.cell - newCell.cell
+  let checkCell = null
+
+  if (vertMove !== 0) {
+    if (vertMove > 0) {
+      for(let i = 1; i < vertMove; i++) {
+        checkCell = board.find(function(e) {
+          return ((e.row === currentCell.row - i) && (e.cell === currentCell.cell))
+        })
+      
+        // check if next cell is currently occupied
+        if (checkCell.value !== "") {
+          return true
+        }
+      }
+    } else {
+      for(let i = -1; i > vertMove; i--) {
+        checkCell = board.find(function(e) {
+          return ((e.row === currentCell.row - i) && (e.cell === currentCell.cell))
+        })
+      
+        // check if next cell is currently occupied
+        if (checkCell.value !== "") {
+          return true
+        }
+      }
+    }
+  }
+
+  if (horMove !== 0) {
+    if (horMove > 0) {
+      for(let i = 1; i < horMove; i++) {
+        checkCell = board.find(function(e) {
+          return ((e.cell === currentCell.cell - i) && (e.row === currentCell.row))
+        })
+      
+        // check if next cell is currently occupied
+        if (checkCell.value !== "") {
+          return true
+        }
+      }
+    } else {
+      for(let i = -1; i > horMove; i--) {
+        checkCell = board.find(function(e) {
+          return ((e.cell === currentCell.cell - i) && (e.row === currentCell.row))
+        })
+      
+        // check if next cell is currently occupied
+        if (checkCell.value !== "") {
+          return true
+        }
+      }  
+    }
+  }
+
   return false
 }
