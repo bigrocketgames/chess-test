@@ -115,6 +115,16 @@ class GameBoard extends Component {
 
           this.successfulMoveUpdate(pieceToMove.piece, pieceToMove, cell, message, history);
 
+        } else {
+          // dispatch to message to display that an invalid move was attempted
+          message = `You can not move ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!`
+          updateMessageSuccess(message)
+  
+          // Set local state for to show which cell was erroneously attempted to move to
+          this.setState({
+            ...this.state,
+            errorMoveCell: cell.id
+          })
         }
       } else if (cell.pieceColor === "") {
 
