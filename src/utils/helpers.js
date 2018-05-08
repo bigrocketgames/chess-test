@@ -36,6 +36,13 @@ export const canPieceMoveToNewCell = (board, piece, currentCell, newCell) => {
       }
       return false;
 
+    case "Queen":
+      // returns true or false to confirm if move by Queen can be made or not
+      if(validQueenMove(currentCell, newCell)) {
+        return !isQueenBlocked(board, currentCell, newCell)
+      }
+      return false;
+
     default:
       return false
   }
@@ -246,5 +253,13 @@ const validKingMove = (currentCell, newCell) => {
 }
 
 const isKingChecked = (board, currentCell, newCell) => {
+  return false
+}
+
+const validQueenMove = (currentCell, newCell) => {
+  return true
+}
+
+const isQueenBlocked = (board, currentCell, newCell) => {
   return false
 }
