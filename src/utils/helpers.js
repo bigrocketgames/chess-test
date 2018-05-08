@@ -257,7 +257,7 @@ const isKingChecked = (board, currentCell, newCell) => {
 }
 
 const validQueenMove = (currentCell, newCell) => {
-  return true
+  return ( (Math.abs(currentCell.row - newCell.row) === Math.abs(currentCell.cell - newCell.cell)) || (Math.abs(currentCell.row - newCell.row) > 0 && (currentCell.cell - newCell.cell === 0)) || (currentCell.row - newCell.row === 0 && Math.abs(currentCell.cell - newCell.cell) > 0) )
 }
 
 const isQueenBlocked = (board, currentCell, newCell) => {
