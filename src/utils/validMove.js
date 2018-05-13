@@ -65,7 +65,7 @@ const validPawnMove = (board, currentCell, newCell) => {
   if (currentCell.pieceColor === "Black") {
     if (currentCell.row === 2) {
       // pawns may move 2 spaces on first move only
-      if ((0 < newCell.row - currentCell.row < 3) && currentCell.cell === newCell.cell) {
+      if ( 0 < newCell.row - currentCell.row && newCell.row - currentCell.row < 3 && currentCell.cell === newCell.cell) {
         return !pawnBlock(board, currentCell, newCell);
       } else {
         return false;
@@ -80,7 +80,7 @@ const validPawnMove = (board, currentCell, newCell) => {
   } else if (currentCell.pieceColor === "White") {
     if (currentCell.row === 7) {
       // pawns may move 2 spaces on first move only
-      if ((0 < currentCell.row - newCell.row < 3) && currentCell.cell === newCell.cell) {
+      if (0 < currentCell.row - newCell.row && currentCell.row - newCell.row < 3 && currentCell.cell === newCell.cell) {
         return !pawnBlock(board, currentCell, newCell)
       } else {
         return false;
