@@ -1,4 +1,4 @@
-import { diagonalBlock, verticalBlock, horizontalBlock, pawnBlock } from "./blockedMoves";
+import { diagonalBlock, verticalBlock, horizontalBlock, pawnBlock } from "./blockedMove";
 
 export const canPieceMoveToNewCell = (board, piece, currentCell, newCell) => {
   switch(piece) {

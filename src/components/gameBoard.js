@@ -8,7 +8,7 @@ import { Button } from '../containers/button';
 import { updateMessageSuccess, resetMessageState } from '../redux/message/actions';
 import { moveSuccess, resetBoard } from '../redux/board/actions';
 import { addHistorySuccess, resetHistory } from '../redux/history/actions';
-import { canPieceMoveToNewCell, gameWon } from '../utils/helpers';
+import { canPieceMoveToNewCell, gameWon } from '../utils/validMove';
 
 class GameBoard extends Component {
   constructor(props) {
