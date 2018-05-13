@@ -138,15 +138,13 @@ const isKingChecked = (board, currentCell, newCell) => {
 }
 
 const validQueenMove = (board, currentCell, newCell) => {
-  if ( (Math.abs(currentCell.row - newCell.row) === Math.abs(currentCell.cell - newCell.cell)) || (Math.abs(currentCell.row - newCell.row) > 0 && (currentCell.cell - newCell.cell === 0)) || (currentCell.row - newCell.row === 0 && Math.abs(currentCell.cell - newCell.cell) > 0) ) {
     if (Math.abs(currentCell.row - newCell.row) === Math.abs(currentCell.cell - newCell.cell) && currentCell.row - newCell.row !== 0) {
       return !diagonalBlock(board, currentCell, newCell);
     } else if (Math.abs(currentCell.row - newCell.row) > 0 && (currentCell.cell - newCell.cell === 0)) {
       return !verticalBlock(board, currentCell, newCell);
-    } else {
+    } else if (currentCell.row - newCell.row === 0 && (Math.abs(currentCell.cell - newCell.cell) > 0)) {
       return !horizontalBlock(board, currentCell, newCell);
     }
-  } else {
+
     return false
-  }
 }
