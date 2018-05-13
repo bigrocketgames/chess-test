@@ -1,11 +1,10 @@
+import { diagonalBlock, verticalBlock, horizontalBlock, pawnBlock } from "./blockedMoves";
+
 export const canPieceMoveToNewCell = (board, piece, currentCell, newCell) => {
   switch(piece) {
     case "Bishop":
       // implement logic to check if valid move
-      if (validBishopMove(currentCell, newCell)) {
-        return !isBishopBlocked(board, currentCell, newCell);
-      }
-      return false;
+      return validBishopMove(board, currentCell, newCell);
 
     case "Knight":
       // implement logic to check if valid move
@@ -14,20 +13,14 @@ export const canPieceMoveToNewCell = (board, piece, currentCell, newCell) => {
     case "Pawn":
       // returns true or false to confirm if move can be made or not
       if(!pawnCapture(currentCell, newCell)) {
-        if(validPawnMove(currentCell, newCell)) {
-          return !isPawnBlocked(board, currentCell, newCell)
-        }
+        return validPawnMove(board, currentCell, newCell)
       } else {
         return true
       }
-      return false;
 
     case "Rook":
       // returns true or false to confirm if move by Rook can be made or not
-      if(validRookMove(currentCell, newCell)) {
-        return !isRookBlocked(board, currentCell, newCell);
-      }
-      return false;
+      return validRookMove(board, currentCell, newCell);
 
     case "King":
       // returns true or false to confirm if move by King can be made or not
@@ -38,10 +31,7 @@ export const canPieceMoveToNewCell = (board, piece, currentCell, newCell) => {
 
     case "Queen":
       // returns true or false to confirm if move by Queen can be made or not
-      if(validQueenMove(currentCell, newCell)) {
-        return !isQueenBlocked(board, currentCell, newCell)
-      }
-      return false;
+      return validQueenMove(board, currentCell, newCell);
 
     default:
       return false
@@ -71,30 +61,58 @@ const pawnCapture = (currentCell, newCell) => {
   return false
 }
 
-const validPawnMove = (currentCell, newCell) => {
+const validPawnMove = (board, currentCell, newCell) => {
   if (currentCell.pieceColor === "Black") {
     if (currentCell.row === 2) {
       // pawns may move 2 spaces on first move only
-      return ((0 < newCell.row - currentCell.row < 3) && currentCell.cell === newCell.cell)
+      if ((0 < newCell.row - currentCell.row < 3) && currentCell.cell === newCell.cell) {
+        return !pawnBlock(board, currentCell, newCell);
+      } else {
+        return false;
+      }
     } else {
-      return (newCell.row - currentCell.row === 1 && currentCell.cell === newCell.cell)
+      if (newCell.row - currentCell.row === 1 && currentCell.cell === newCell.cell) {
+        return !pawnBlock(board, currentCell, newCell);
+      } else {
+        return false;
+      }
     }
   } else if (currentCell.pieceColor === "White") {
     if (currentCell.row === 7) {
       // pawns may move 2 spaces on first move only
-      return ((0 < currentCell.row - newCell.row < 3) && currentCell.cell === newCell.cell)
+      if ((0 < currentCell.row - newCell.row < 3) && currentCell.cell === newCell.cell) {
+        return !pawnBlock(board, currentCell, newCell)
+      } else {
+        return false;
+      }
     } else {
-      return (currentCell.row - newCell.row === 1 && currentCell.cell === newCell.cell)
+      if (currentCell.row - newCell.row === 1 && currentCell.cell === newCell.cell) {
+        return !pawnBlock(board, currentCell, newCell)
+      } else {
+        return false;
+      }
     }
   } 
 }
 
-const validRookMove = (currentCell, newCell) => {
-  return (Math.abs(currentCell.row - newCell.row) > 0 && currentCell.cell - newCell.cell === 0) || (Math.abs(currentCell.cell - newCell.cell) > 0 && currentCell.row - newCell.row === 0)
+const validRookMove = (board, currentCell, newCell) => {
+  if ((Math.abs(currentCell.row - newCell.row) > 0 && currentCell.cell - newCell.cell === 0) || (Math.abs(currentCell.cell - newCell.cell) > 0 && currentCell.row - newCell.row === 0)) {
+    if (Math.abs(currentCell.row - newCell.row) > 0 && currentCell.cell - newCell.cell === 0) {
+      return !verticalBlock(board, currentCell, newCell);
+    } else {
+      return !horizontalBlock(board, currentCell, newCell);
+    }
+  } else {
+    return false;
+  }
 }
 
-const validBishopMove = (currentCell, newCell) => {
-  return Math.abs(currentCell.row - newCell.row) === Math.abs(currentCell.cell - newCell.cell);
+const validBishopMove = (board, currentCell, newCell) => {
+  if (Math.abs(currentCell.row - newCell.row) === Math.abs(currentCell.cell - newCell.cell)) {
+    return !diagonalBlock(board, currentCell, newCell);
+  } else {
+    return false;
+  }
 }
 
 const validKnightMove = (currentCell, newCell) => {
@@ -111,143 +129,6 @@ const validKnightMove = (currentCell, newCell) => {
   return false
 }
 
-const isBishopBlocked = (board, currentCell, newCell) => {
-  // find differences between current and new row and current and new cell - initiate checkCell variable
-  const rowNum = currentCell.row - newCell.row
-  const cellNum = currentCell.cell - newCell.cell
-  let checkCell = null
-
-  if (rowNum > 0) {
-    for(let i = 1; i < rowNum; i++) {
-      if (cellNum > 0) {
-        checkCell = board.find(function(e) {
-          return ((e.row === currentCell.row - i) && (e.cell === currentCell.cell - i))
-        }) 
-      } else {
-        checkCell = board.find(function(e) {
-          return ((e.row === currentCell.row - i) && (e.cell === currentCell.cell + i))
-        })
-      }
-
-      // check if next cell is currently occupied
-      if (checkCell.value !== "") {
-        return true
-      }
-    }
-  } else {
-    for(let i = -1; i > rowNum; i--){
-      if (cellNum > 0) {
-        checkCell = board.find(function(e) {
-          return ((e.row === currentCell.row - i) && (e.cell === currentCell.cell + i))
-        }) 
-      } else {
-        checkCell = board.find(function(e) {
-          return ((e.row === currentCell.row - i) && (e.cell === currentCell.cell - i))
-        })
-      }
-
-      // check if next cell is currently occupied and return true if it is occupied to indicate that the bishop is blocked from moving past
-      if (checkCell.value !== "") {
-        return true
-      }
-    }
-  }
-
-  // if the bishop is not blocked return false
-  return false
-}
-
-const isPawnBlocked = (board, currentCell, newCell) => {
-  const numOfMoves = currentCell.row - newCell.row
-  let checkCell = null
-
-  if (numOfMoves > 0) {
-    for(let i = 1; i <= numOfMoves; i++) {
-      checkCell = board.find(function(e) {
-        return ((e.row === currentCell.row - i) && (e.cell === currentCell.cell))
-      })
-
-      // check if next cell is currently occupied
-      if (checkCell.value !== "") {
-        return true
-      }
-    }
-  } else {
-    for(let i = -1; i >= numOfMoves; i--) {
-      checkCell = board.find(function(e) {
-        return ((e.row === currentCell.row - i) && (e.cell === currentCell.cell))
-      })
-      
-      // check if next cell is currently occupied
-      if (checkCell.value !== "") {
-        return true
-      }
-    }
-  }
-
-  return false;
-}
-
-const isRookBlocked = (board, currentCell, newCell) => {
-  const vertMove = currentCell.row - newCell.row
-  const horMove = currentCell.cell - newCell.cell
-  let checkCell = null
-
-  if (vertMove !== 0) {
-    if (vertMove > 0) {
-      for(let i = 1; i < vertMove; i++) {
-        checkCell = board.find(function(e) {
-          return ((e.row === currentCell.row - i) && (e.cell === currentCell.cell))
-        })
-      
-        // check if next cell is currently occupied
-        if (checkCell.value !== "") {
-          return true
-        }
-      }
-    } else {
-      for(let i = -1; i > vertMove; i--) {
-        checkCell = board.find(function(e) {
-          return ((e.row === currentCell.row - i) && (e.cell === currentCell.cell))
-        })
-      
-        // check if next cell is currently occupied
-        if (checkCell.value !== "") {
-          return true
-        }
-      }
-    }
-  }
-
-  if (horMove !== 0) {
-    if (horMove > 0) {
-      for(let i = 1; i < horMove; i++) {
-        checkCell = board.find(function(e) {
-          return ((e.cell === currentCell.cell - i) && (e.row === currentCell.row))
-        })
-      
-        // check if next cell is currently occupied
-        if (checkCell.value !== "") {
-          return true
-        }
-      }
-    } else {
-      for(let i = -1; i > horMove; i--) {
-        checkCell = board.find(function(e) {
-          return ((e.cell === currentCell.cell - i) && (e.row === currentCell.row))
-        })
-      
-        // check if next cell is currently occupied
-        if (checkCell.value !== "") {
-          return true
-        }
-      }  
-    }
-  }
-
-  return false
-}
-
 const validKingMove = (currentCell, newCell) => {
   return (Math.abs(currentCell.row - newCell.row) < 2 && Math.abs(currentCell.cell - newCell.cell) < 2)
 }
@@ -256,10 +137,16 @@ const isKingChecked = (board, currentCell, newCell) => {
   return false
 }
 
-const validQueenMove = (currentCell, newCell) => {
-  return ( (Math.abs(currentCell.row - newCell.row) === Math.abs(currentCell.cell - newCell.cell)) || (Math.abs(currentCell.row - newCell.row) > 0 && (currentCell.cell - newCell.cell === 0)) || (currentCell.row - newCell.row === 0 && Math.abs(currentCell.cell - newCell.cell) > 0) )
-}
-
-const isQueenBlocked = (board, currentCell, newCell) => {
-  return false
+const validQueenMove = (board, currentCell, newCell) => {
+  if ( (Math.abs(currentCell.row - newCell.row) === Math.abs(currentCell.cell - newCell.cell)) || (Math.abs(currentCell.row - newCell.row) > 0 && (currentCell.cell - newCell.cell === 0)) || (currentCell.row - newCell.row === 0 && Math.abs(currentCell.cell - newCell.cell) > 0) ) {
+    if (Math.abs(currentCell.row - newCell.row) === Math.abs(currentCell.cell - newCell.cell) && currentCell.row - newCell.row !== 0) {
+      return !diagonalBlock(board, currentCell, newCell);
+    } else if (Math.abs(currentCell.row - newCell.row) > 0 && (currentCell.cell - newCell.cell === 0)) {
+      return !verticalBlock(board, currentCell, newCell);
+    } else {
+      return !horizontalBlock(board, currentCell, newCell);
+    }
+  } else {
+    return false
+  }
 }
