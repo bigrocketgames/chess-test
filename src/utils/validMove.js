@@ -38,17 +38,6 @@ export const canPieceMoveToNewCell = (board, piece, currentCell, newCell) => {
   }
 }
 
-// check if any pieces are left of the captured color
-export const gameWon = (board, capturedColor, newCell) => {
-  const piecesLeft = board.findIndex(cell => (cell.pieceColor === capturedColor) && (cell.id !== newCell.id))
-  
-  if (piecesLeft === -1) {
-    return true
-  } else {
-    return false
-  }
-}
-
 const pawnCapture = (currentCell, newCell) => {
   // check for possible capture
   if (newCell.pieceColor !== currentCell.pieceColor && newCell.pieceColor !== "") {
