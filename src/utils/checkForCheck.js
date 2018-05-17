@@ -1,8 +1,9 @@
 // check if king is checked after another piece moves
 export const isKingChecked = (board, turnColor, pieceToMove, cell) => {
-  // var newArray = JSON.parse(JSON.stringify(orgArray))
+  // copying board array so as not to modify the original
   let boardToUpdate = JSON.parse(JSON.stringify(board))
-  // update the board passed in to proposed move
+
+  // update the copy of the board to proposed move
   boardToUpdate[cell.id-1].piece =  pieceToMove.piece
   boardToUpdate[cell.id-1].pieceColor = pieceToMove.pieceColor
   boardToUpdate[cell.id-1].value = pieceToMove.value
