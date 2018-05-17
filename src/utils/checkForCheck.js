@@ -53,7 +53,7 @@ const horizontalCheck = (updatedBoard, kingCell, enemyColor) => {
   // check to the left
   for (let i = 1; i <= movesLeft; i++) {
     checkCell = updatedBoard.find(function(e) {
-      return ((e.row === kingCell.row) && (e.cell === i))
+      return ((e.row === kingCell.row) && (e.cell === kingCell.cell - i))
     })
 
     if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === enemyColor) {
@@ -64,12 +64,31 @@ const horizontalCheck = (updatedBoard, kingCell, enemyColor) => {
   return false;
 }
 
-const verticalCheck = (updatedBoard, kingCell) => {
-  let checks = 0;
+const verticalCheck = (updatedBoard, kingCell, enemyColor) => {
+  let checkCell = null;
+  const movesUp = kingCell.row - 1;
+  const movesDown = 8 - kingCell.row;
   // check up the board
+  for (let i = 1; i <= movesUp; i++) {
+    checkCell = updatedBoard.find(function(e) {
+      return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell))
+    })
+
+    if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === enemyColor) {
+      return true;
+    }
+  }
 
   // check down the board
-  return checks
+  for (let i = 1; i <= movesDown; i++) {
+    checkCell = updatedBoard.find(function(e) {
+      return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell))
+    })
+
+    if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === enemyColor) {
+      return true;
+    }
+  }
 }
 
 const diagonalCheck = (updatedBoard, kingCell) => {
