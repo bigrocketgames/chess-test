@@ -105,8 +105,21 @@ class GameBoard extends Component {
           // if yes - is it a checkmate
             // if yes - produce game winning message and lock board
             // if no - produce check message
+
+          pastGameState = gameState;
+          message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!  ${nextColor} your king is in check and it is your turn.`
+          const historyMessage = `Moved ${pieceToMove.pieceColor} ${pieceToMove.piece} from cell ${pieceToMove.space} to cell ${cell.space} - check`
+          history = {gameState: pastGameState, message: historyMessage}
+
+          this.successfulMoveUpdate(pieceToMove.piece, pieceToMove, cell, message, history)
         } else {
           // if no - produce move message
+          pastGameState = gameState;
+          message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!  ${nextColor} it is your turn.`
+          const historyMessage = `Moved ${pieceToMove.pieceColor} ${pieceToMove.piece} from cell ${pieceToMove.space} to cell ${cell.space}`
+          history = {gameState: pastGameState, message: historyMessage}
+
+          this.successfulMoveUpdate(pieceToMove.piece, pieceToMove, cell, message, history)
         }
       } else {
         // if no - produce error message and update message box
