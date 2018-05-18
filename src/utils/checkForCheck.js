@@ -1,5 +1,6 @@
 // check if king is checked after another piece moves
-export const isKingChecked = (board, turnColor, pieceToMove, cell) => {
+export const isKingChecked = (board, turnColor, pieceToMove, cell, ownKing = false) => {
+  let kingToCheck = null;
   // copying board array so as not to modify the original
   let boardToUpdate = JSON.parse(JSON.stringify(board))
 
@@ -11,15 +12,23 @@ export const isKingChecked = (board, turnColor, pieceToMove, cell) => {
   boardToUpdate[pieceToMove.id-1].pieceColor = ""
   boardToUpdate[pieceToMove.id-1].value = ""
 
-  const kingColor = (turnColor === "White") ? "Black" : "White"
+  if (ownKing) {
+    const kingColor = turnColor;
+    kingToCheck = boardToUpdate.find(function(e) {
+      return ((e.piece === "King") && (e.pieceColor === kingColor))
+    })
+  } else {
+    const kingColor = (turnColor === "White") ? "Black" : "White"
+    // check only the king of the attacked color - if white moved, check on the black king and vice versa
+    kingToCheck = boardToUpdate.find(function(e) {
+      return ((e.piece === "King") && (e.pieceColor === kingColor))
+    })
+  }
   
-  // check only the king of the attacked color - if white moved, check on the black king and vice versa
-  const enemyKing = boardToUpdate.find(function(e) {
-    return ((e.piece === "King") && (e.pieceColor === kingColor))
-  })
+  
 
   // determine if checked from a horizontal attack
-  if (horizontalCheck(boardToUpdate, enemyKing, turnColor) || verticalCheck(boardToUpdate, enemyKing, turnColor) || diagonalCheck(boardToUpdate, enemyKing, turnColor) || knightCheck(boardToUpdate, enemyKing, turnColor)){
+  if (horizontalCheck(boardToUpdate, kingToCheck, turnColor) || verticalCheck(boardToUpdate, kingToCheck, turnColor) || diagonalCheck(boardToUpdate, kingToCheck, turnColor) || knightCheck(boardToUpdate, kingToCheck, turnColor)){
     return true
   }
 
@@ -199,8 +208,6 @@ const knightCheck = (updatedBoard, kingCell, kingColor) => {
   let checkCell = null;
   const movesUp = (kingCell.row - 1 > 2) ? 2 : kingCell.row - 1
   const movesDown = (8 - kingCell.row > 2) ? 2 : 8 - kingCell.row
-  const movesLeft = (kingCell.cell - 1 > 2) ? 2 : kingCell.cell - 1
-  const movesRight = (8 - kingCell.cell > 2) ? 2 : 8 - kingCell.cell
 
   // check top right - -vert +hor
   for (let i = 1; i <= movesUp; i++) {
