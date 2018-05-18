@@ -197,7 +197,94 @@ const diagonalCheck = (updatedBoard, kingCell, kingColor) => {
 // check for knights that put king in check
 const knightCheck = (updatedBoard, kingCell, kingColor) => {
   let checkCell = null;
+  const movesUp = (kingCell.row - 1 > 2) ? 2 : kingCell.row - 1
+  const movesDown = (8 - kingCell.row > 2) ? 2 : 8 - kingCell.row
+  const movesLeft = (kingCell.cell - 1 > 2) ? 2 : kingCell.cell - 1
+  const movesRight = (8 - kingCell.cell > 2) ? 2 : 8 - kingCell.cell
 
+  // check top right - -vert +hor
+  for (let i = 1; i <= movesUp; i++) {
+    if (i === 1) {
+      checkCell = updatedBoard.find(function(e) {
+        return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell + 2))
+      })
+
+      if ((checkCell.piece === "Knight") && checkCell.pieceColor === kingColor) {
+        return true;
+      }
+    } else {
+      checkCell = updatedBoard.find(function(e) {
+        return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell + 1))
+      })
+
+      if (checkCell.piece === "Knight" && checkCell.pieceColor === kingColor) {
+        return true;
+      }
+    }
+  }
+
+  // check top left - -vert -hor
+  for (let i = 1; i <= movesUp; i++) {
+    if (i === 1) {
+      checkCell = updatedBoard.find(function(e) {
+        return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell - 2))
+      })
+
+      if (checkCell.piece === "Knight" && checkCell.pieceColor === kingColor) {
+        return true;
+      }
+    } else {
+      checkCell = updatedBoard.find(function(e) {
+        return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell - 1))
+      })
+
+      if (checkCell.piece === "Knight" && checkCell.pieceColor === kingColor) {
+        return true;
+      }
+    }
+  }
+
+  // check bottom right - +vert +hor
+  for (let i = 1; i <= movesDown; i++) {
+    if (i === 1) {
+      checkCell = updatedBoard.find(function(e) {
+        return ((e.row  === kingCell.row + i) && (e.cell === kingCell.cell + 2))
+      })
+
+      if (checkCell.piece === "Knight" && checkCell.pieceColor === kingColor) {
+        return true;
+      }
+    } else {
+      checkCell = updatedBoard.find(function(e) {
+        return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell + 1))
+      })
+
+      if (checkCell.piece === "Knight" && checkCell.pieceColor === kingColor) {
+        return true;
+      }
+    }
+  }
+
+  // check bottom left - +vert - hor
+  for (let i = 1; i <= movesDown; i++) {
+    if (i === 1) {
+      checkCell = updatedBoard.find(function(e) {
+        return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell - 2))
+      })
+
+      if (checkCell.piece === "Knight" && checkCell.pieceColor === kingColor) {
+        return true;
+      }
+    } else {
+      checkCell = updatedBoard.find(function(e) {
+        return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell - 1))
+      })
+
+      if (checkCell.piece === "Knight" && checkCell.pieceColor === kingColor) {
+        return true;
+      }
+    }
+  }
   
   return false
 }
