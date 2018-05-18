@@ -11,15 +11,15 @@ export const isKingChecked = (board, turnColor, pieceToMove, cell) => {
   boardToUpdate[pieceToMove.id-1].pieceColor = ""
   boardToUpdate[pieceToMove.id-1].value = ""
 
-  const enemyColor = (turnColor === "White") ? "Black" : "White"
+  const kingColor = (turnColor === "White") ? "Black" : "White"
   
   // check only the king of the attacked color - if white moved, check on the black king and vice versa
   const enemyKing = boardToUpdate.find(function(e) {
-    return ((e.piece === "King") && (e.pieceColor === enemyColor))
+    return ((e.piece === "King") && (e.pieceColor === kingColor))
   })
 
   // determine if checked from a horizontal attack
-  if (horizontalCheck(boardToUpdate, enemyKing, turnColor) || verticalCheck(boardToUpdate, enemyKing, turnColor) || diagonalCheck(boardToUpdate, enemyKing, turnColor)){
+  if (horizontalCheck(boardToUpdate, enemyKing, turnColor) || verticalCheck(boardToUpdate, enemyKing, turnColor) || diagonalCheck(boardToUpdate, enemyKing, turnColor) || knightCheck(boardToUpdate, enemyKing, turnColor)){
     return true
   }
 
@@ -35,7 +35,7 @@ export const checkMate = () => {
   // check this by testing for spots the king could perhaps move and if they are safe spaces
 }
 
-const horizontalCheck = (updatedBoard, kingCell, enemyColor) => {
+const horizontalCheck = (updatedBoard, kingCell, kingColor) => {
   let checkCell = null;
   const movesRight = 8 - kingCell.cell;
   const movesLeft = kingCell.cell - 1;
@@ -46,7 +46,7 @@ const horizontalCheck = (updatedBoard, kingCell, enemyColor) => {
       return ((e.row === kingCell.row) && (e.cell === kingCell.cell + i) )
     })
 
-    if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === enemyColor) {
+    if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
       return true;
     }
   }
@@ -57,7 +57,7 @@ const horizontalCheck = (updatedBoard, kingCell, enemyColor) => {
       return ((e.row === kingCell.row) && (e.cell === kingCell.cell - i))
     })
 
-    if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === enemyColor) {
+    if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
       return true;
     }
   }
@@ -65,7 +65,7 @@ const horizontalCheck = (updatedBoard, kingCell, enemyColor) => {
   return false;
 }
 
-const verticalCheck = (updatedBoard, kingCell, enemyColor) => {
+const verticalCheck = (updatedBoard, kingCell, kingColor) => {
   let checkCell = null;
   const movesUp = kingCell.row - 1;
   const movesDown = 8 - kingCell.row;
@@ -75,7 +75,7 @@ const verticalCheck = (updatedBoard, kingCell, enemyColor) => {
       return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell))
     })
 
-    if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === enemyColor) {
+    if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
       return true;
     }
   }
@@ -86,20 +86,118 @@ const verticalCheck = (updatedBoard, kingCell, enemyColor) => {
       return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell))
     })
 
-    if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === enemyColor) {
+    if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
       return true;
     }
   }
 }
 
-const diagonalCheck = (updatedBoard, kingCell) => {
-  let checks = 0;
-  // check to the top right
+const diagonalCheck = (updatedBoard, kingCell, kingColor) => {
+  let checkCell = null;
+  const movesUp = kingCell.row - 1;
+  const movesDown = 8 - kingCell.row;
+  const movesRight = 8 - kingCell.cell;
+  const movesLeft = kingCell.cell - 1;
 
-  // check to the top left
+  // check to the top right - -vert, +hor
+  if (movesUp < movesRight) {
+    for (let i = 1; i <= movesUp; i++) {
+      checkCell = updatedBoard.find(function(e) {
+        return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell + i))
+      })
 
-  // check to the bottom right
+      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
+        return true;
+      }
+    }
+  } else {
+    for (let i = 1; i <= movesRight; i++) {
+      checkCell = updatedBoard.find(function(e) {
+        return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell + i))
+      })
 
-  // check to the bottom left
-  return checks
+      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
+        return true;
+      }
+    }
+
+  }
+  // check to the top left - -vert, -hor
+  if (movesUp < movesLeft) {
+    for (let i = 1; i <= movesUp; i++) {
+      checkCell = updatedBoard.find(function(e) {
+        return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell - i))
+      })
+
+      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
+        return true;
+      }
+    }
+  } else {
+    for (let i = 1; i <= movesLeft; i++) {
+      checkCell = updatedBoard.find(function(e) {
+        return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell - i))
+      })
+
+      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
+        return true;
+      }
+    }
+  }
+
+  // check to the bottom right - +vert, +hor
+  if (movesDown < movesRight) {
+    for (let i = 1; i <= movesDown; i++) {
+      checkCell = updatedBoard.find(function(e) {
+        return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell + i))
+      })
+
+      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
+        return true;
+      }
+    }
+  } else {
+    for (let i = 1; i <= movesRight; i++) {
+      checkCell = updatedBoard.find(function(e) {
+        return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell + i))
+      })
+
+      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
+        return true;
+      }
+    }
+  }
+
+  // check to the bottom left - +vert, -hor
+  if (movesDown < movesLeft) {
+    for (let i = 1; i <= movesDown; i++) {
+      checkCell = updatedBoard.find(function(e) {
+        return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell - i))
+      })
+
+      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
+        return true;
+      }
+    }
+  } else {
+    for (let i = 1; i <= movesLeft; i++) {
+      checkCell = updatedBoard.find(function(e) {
+        return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell - i))
+      })
+
+      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+// check for knights that put king in check
+const knightCheck = (updatedBoard, kingCell, kingColor) => {
+  let checkCell = null;
+
+  
+  return false
 }
