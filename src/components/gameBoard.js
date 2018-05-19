@@ -99,35 +99,48 @@ class GameBoard extends Component {
 
       // check if piece can move to selected space
       if (canPieceMoveToNewCell(gameState.board, pieceToMove.piece, pieceToMove, cell)) {
-        // if yes - then see if that produces a check
+        // check to make sure move doesn't put own king in check
+        if (isKingChecked(gameState.board, gameState.turnColor, pieceToMove, cell, true)) {
+          // if no - produce error message and update message box
+          // dispatch to update message to display that an invalid move was attempted
+          message = `You can not move ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space} beucase it will put your own king in check!`
+          updateMessageSuccess(message)
 
-        if (isKingChecked(gameState.board, gameState.turnColor, pieceToMove, cell)) {
-          // if yes - is it a checkmate
-            // if yes - produce game winning message and lock board
-            // if no - produce check message
-
-          pastGameState = gameState;
-          message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!  ${nextColor} your king is in check and it is your turn.`
-          const historyMessage = `Moved ${pieceToMove.pieceColor} ${pieceToMove.piece} from cell ${pieceToMove.space} to cell ${cell.space} - check`
-          history = {gameState: pastGameState, message: historyMessage}
-
-          this.successfulMoveUpdate(pieceToMove.piece, pieceToMove, cell, message, history)
+          // Set local state to show which cell was erroneously attempted to move to
+          this.setState({
+            ...this.state,
+            errorMoveCell: cell.id
+          })
         } else {
-          // if no - produce move message
-          pastGameState = gameState;
-          message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!  ${nextColor} it is your turn.`
-          const historyMessage = `Moved ${pieceToMove.pieceColor} ${pieceToMove.piece} from cell ${pieceToMove.space} to cell ${cell.space}`
-          history = {gameState: pastGameState, message: historyMessage}
+          // if yes - then see if that produces a check
+          if (isKingChecked(gameState.board, gameState.turnColor, pieceToMove, cell)) {
+            // if yes - is it a checkmate
+              // if yes - produce game winning message and lock board
+              // if no - produce check message
 
-          this.successfulMoveUpdate(pieceToMove.piece, pieceToMove, cell, message, history)
+            pastGameState = gameState;
+            message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!  ${nextColor} your king is in check and it is your turn.`
+            const historyMessage = `Moved ${pieceToMove.pieceColor} ${pieceToMove.piece} from cell ${pieceToMove.space} to cell ${cell.space} - check`
+            history = {gameState: pastGameState, message: historyMessage}
+
+            this.successfulMoveUpdate(pieceToMove.piece, pieceToMove, cell, message, history)
+          } else {
+            // if no - produce move message
+            pastGameState = gameState;
+            message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!  ${nextColor} it is your turn.`
+            const historyMessage = `Moved ${pieceToMove.pieceColor} ${pieceToMove.piece} from cell ${pieceToMove.space} to cell ${cell.space}`
+            history = {gameState: pastGameState, message: historyMessage}
+
+            this.successfulMoveUpdate(pieceToMove.piece, pieceToMove, cell, message, history)
+          } 
         }
       } else {
         // if no - produce error message and update message box
-        // dispatch to message to display that an invalid move was attempted
+        // dispatch to update message to display that an invalid move was attempted
         message = `You can not move ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!`
         updateMessageSuccess(message)
 
-        // Set local state for to show which cell was erroneously attempted to move to
+        // Set local state to show which cell was erroneously attempted to move to
         this.setState({
           ...this.state,
           errorMoveCell: cell.id
