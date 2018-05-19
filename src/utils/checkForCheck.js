@@ -48,53 +48,54 @@ export const checkMate = () => {
 }
 
 const horizontalCheck = (updatedBoard, kingCell, attackColor) => {
-  let checkCell = null;
+  const checkingPieces = ["Rook", "Queen"]
   const movesRight = 8 - kingCell.cell;
   const movesLeft = kingCell.cell - 1;
 
   // check to the right
   for (let i = 1; i <= movesRight; i++) {
-    checkCell = updatedBoard.find(function(e) {
-      return ((e.row === kingCell.row) && (e.cell === kingCell.cell + i) )
-    })
-
-    if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
-      return true;
+    const result = getCheckCell(updatedBoard, kingCell.row, kingCell.cell + i, checkingPieces, attackColor);
+    if (result === "teammate") {
+      break;
+    } else if (result) {
+      return true
     }
   }
 
   // check to the left
   for (let i = 1; i <= movesLeft; i++) {
-    checkCell = updatedBoard.find(function(e) {
-      return ((e.row === kingCell.row) && (e.cell === kingCell.cell - i))
-    })
-
-    if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
-      return true;
+    const result = getCheckCell(updatedBoard, kingCell.row, kingCell.cell - i, checkingPieces, attackColor);
+    if (result === "teammate") {
+      break;
+    } else if (result) {
+      return true
     }
   }
   
-  return false;
+  return false
 }
 
 const verticalCheck = (updatedBoard, kingCell, attackColor) => {
-  let checkCell = null;
   const checkingPieces = ["Rook", "Queen"]
   const movesUp = kingCell.row - 1;
   const movesDown = 8 - kingCell.row;
   // check up the board
   for (let i = 1; i <= movesUp; i++) {
     const result = getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell, checkingPieces, attackColor)
-    if (result !== "empty") {
-      return result 
+    if (result === "teammate") {
+      break;
+    } else if (result) {
+      return true
     }
   }
 
   // check down the board
   for (let i = 1; i <= movesDown; i++) {
     const result = getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell, checkingPieces, attackColor)
-    if (result !== "empty") {
-      return result
+    if (result === "teammate") {
+      break;
+    } else if (result) {
+      return true
     }
   }
 
@@ -302,10 +303,10 @@ const getCheckCell = (updatedBoard, row, cell, checkingPieces, attackColor) => {
     return (e.row === row && e.cell === cell)
   })
 
-  if (checkCell.piece !== "") {
-    return (checkingPieces.includes(checkCell.piece) && checkCell.pieceColor === attackColor) ? true : false
-  } else {
-    return "empty"
+  if (checkingPieces.includes(checkCell.piece) && checkCell.pieceColor === attackColor) {
+    return true
+  } else if (checkingPieces.includes(checkCell.piece) && checkCell.pieceColor !== attackColor) {
+    return "teammate"
   }
   
 }
