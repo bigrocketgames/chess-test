@@ -1,6 +1,7 @@
 // check if king is checked after another piece moves
 export const isKingChecked = (board, turnColor, pieceToMove, cell, ownKing = false) => {
   let kingToCheck = null;
+  let attackColor = null;
   // copying board array so as not to modify the original
   let boardToUpdate = JSON.parse(JSON.stringify(board))
 
@@ -14,11 +15,13 @@ export const isKingChecked = (board, turnColor, pieceToMove, cell, ownKing = fal
 
   if (ownKing) {
     const kingColor = turnColor;
+    attackColor = (turnColor === "White") ? "Black" : "White"
     kingToCheck = boardToUpdate.find(function(e) {
       return ((e.piece === "King") && (e.pieceColor === kingColor))
     })
   } else {
     const kingColor = (turnColor === "White") ? "Black" : "White"
+    attackColor = turnColor;
     // check only the king of the attacked color - if white moved, check on the black king and vice versa
     kingToCheck = boardToUpdate.find(function(e) {
       return ((e.piece === "King") && (e.pieceColor === kingColor))
@@ -28,7 +31,7 @@ export const isKingChecked = (board, turnColor, pieceToMove, cell, ownKing = fal
   
 
   // determine if checked from a horizontal attack
-  if (horizontalCheck(boardToUpdate, kingToCheck, turnColor) || verticalCheck(boardToUpdate, kingToCheck, turnColor) || diagonalCheck(boardToUpdate, kingToCheck, turnColor) || knightCheck(boardToUpdate, kingToCheck, turnColor)){
+  if (horizontalCheck(boardToUpdate, kingToCheck, attackColor) || verticalCheck(boardToUpdate, kingToCheck, attackColor) || diagonalCheck(boardToUpdate, kingToCheck, attackColor) || knightCheck(boardToUpdate, kingToCheck, attackColor)){
     return true
   }
 
@@ -44,7 +47,7 @@ export const checkMate = () => {
   // check this by testing for spots the king could perhaps move and if they are safe spaces
 }
 
-const horizontalCheck = (updatedBoard, kingCell, kingColor) => {
+const horizontalCheck = (updatedBoard, kingCell, attackColor) => {
   let checkCell = null;
   const movesRight = 8 - kingCell.cell;
   const movesLeft = kingCell.cell - 1;
@@ -55,7 +58,7 @@ const horizontalCheck = (updatedBoard, kingCell, kingColor) => {
       return ((e.row === kingCell.row) && (e.cell === kingCell.cell + i) )
     })
 
-    if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
+    if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
       return true;
     }
   }
@@ -66,7 +69,7 @@ const horizontalCheck = (updatedBoard, kingCell, kingColor) => {
       return ((e.row === kingCell.row) && (e.cell === kingCell.cell - i))
     })
 
-    if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
+    if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
       return true;
     }
   }
@@ -74,34 +77,31 @@ const horizontalCheck = (updatedBoard, kingCell, kingColor) => {
   return false;
 }
 
-const verticalCheck = (updatedBoard, kingCell, kingColor) => {
+const verticalCheck = (updatedBoard, kingCell, attackColor) => {
   let checkCell = null;
+  const checkingPieces = ["Rook", "Queen"]
   const movesUp = kingCell.row - 1;
   const movesDown = 8 - kingCell.row;
   // check up the board
   for (let i = 1; i <= movesUp; i++) {
-    checkCell = updatedBoard.find(function(e) {
-      return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell))
-    })
-
-    if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
-      return true;
+    const result = getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell, checkingPieces, attackColor)
+    if (result !== "empty") {
+      return result 
     }
   }
 
   // check down the board
   for (let i = 1; i <= movesDown; i++) {
-    checkCell = updatedBoard.find(function(e) {
-      return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell))
-    })
-
-    if ((checkCell.piece === "Rook" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
-      return true;
+    const result = getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell, checkingPieces, attackColor)
+    if (result !== "empty") {
+      return result
     }
   }
+
+  return false
 }
 
-const diagonalCheck = (updatedBoard, kingCell, kingColor) => {
+const diagonalCheck = (updatedBoard, kingCell, attackColor) => {
   let checkCell = null;
   const movesUp = kingCell.row - 1;
   const movesDown = 8 - kingCell.row;
@@ -115,7 +115,7 @@ const diagonalCheck = (updatedBoard, kingCell, kingColor) => {
         return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell + i))
       })
 
-      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
+      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
         return true;
       }
     }
@@ -125,7 +125,7 @@ const diagonalCheck = (updatedBoard, kingCell, kingColor) => {
         return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell + i))
       })
 
-      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
+      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
         return true;
       }
     }
@@ -138,7 +138,7 @@ const diagonalCheck = (updatedBoard, kingCell, kingColor) => {
         return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell - i))
       })
 
-      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
+      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
         return true;
       }
     }
@@ -148,7 +148,7 @@ const diagonalCheck = (updatedBoard, kingCell, kingColor) => {
         return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell - i))
       })
 
-      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
+      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
         return true;
       }
     }
@@ -161,7 +161,7 @@ const diagonalCheck = (updatedBoard, kingCell, kingColor) => {
         return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell + i))
       })
 
-      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
+      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
         return true;
       }
     }
@@ -171,7 +171,7 @@ const diagonalCheck = (updatedBoard, kingCell, kingColor) => {
         return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell + i))
       })
 
-      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
+      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
         return true;
       }
     }
@@ -184,7 +184,7 @@ const diagonalCheck = (updatedBoard, kingCell, kingColor) => {
         return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell - i))
       })
 
-      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
+      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
         return true;
       }
     }
@@ -194,7 +194,7 @@ const diagonalCheck = (updatedBoard, kingCell, kingColor) => {
         return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell - i))
       })
 
-      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === kingColor) {
+      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
         return true;
       }
     }
@@ -204,7 +204,7 @@ const diagonalCheck = (updatedBoard, kingCell, kingColor) => {
 }
 
 // check for knights that put king in check
-const knightCheck = (updatedBoard, kingCell, kingColor) => {
+const knightCheck = (updatedBoard, kingCell, attackColor) => {
   let checkCell = null;
   const movesUp = (kingCell.row - 1 > 2) ? 2 : kingCell.row - 1
   const movesDown = (8 - kingCell.row > 2) ? 2 : 8 - kingCell.row
@@ -216,7 +216,7 @@ const knightCheck = (updatedBoard, kingCell, kingColor) => {
         return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell + 2))
       })
 
-      if ((checkCell.piece === "Knight") && checkCell.pieceColor === kingColor) {
+      if ((checkCell.piece === "Knight") && checkCell.pieceColor === attackColor) {
         return true;
       }
     } else {
@@ -224,7 +224,7 @@ const knightCheck = (updatedBoard, kingCell, kingColor) => {
         return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell + 1))
       })
 
-      if (checkCell.piece === "Knight" && checkCell.pieceColor === kingColor) {
+      if (checkCell.piece === "Knight" && checkCell.pieceColor === attackColor) {
         return true;
       }
     }
@@ -237,7 +237,7 @@ const knightCheck = (updatedBoard, kingCell, kingColor) => {
         return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell - 2))
       })
 
-      if (checkCell.piece === "Knight" && checkCell.pieceColor === kingColor) {
+      if (checkCell.piece === "Knight" && checkCell.pieceColor === attackColor) {
         return true;
       }
     } else {
@@ -245,7 +245,7 @@ const knightCheck = (updatedBoard, kingCell, kingColor) => {
         return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell - 1))
       })
 
-      if (checkCell.piece === "Knight" && checkCell.pieceColor === kingColor) {
+      if (checkCell.piece === "Knight" && checkCell.pieceColor === attackColor) {
         return true;
       }
     }
@@ -258,7 +258,7 @@ const knightCheck = (updatedBoard, kingCell, kingColor) => {
         return ((e.row  === kingCell.row + i) && (e.cell === kingCell.cell + 2))
       })
 
-      if (checkCell.piece === "Knight" && checkCell.pieceColor === kingColor) {
+      if (checkCell.piece === "Knight" && checkCell.pieceColor === attackColor) {
         return true;
       }
     } else {
@@ -266,7 +266,7 @@ const knightCheck = (updatedBoard, kingCell, kingColor) => {
         return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell + 1))
       })
 
-      if (checkCell.piece === "Knight" && checkCell.pieceColor === kingColor) {
+      if (checkCell.piece === "Knight" && checkCell.pieceColor === attackColor) {
         return true;
       }
     }
@@ -279,7 +279,7 @@ const knightCheck = (updatedBoard, kingCell, kingColor) => {
         return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell - 2))
       })
 
-      if (checkCell.piece === "Knight" && checkCell.pieceColor === kingColor) {
+      if (checkCell.piece === "Knight" && checkCell.pieceColor === attackColor) {
         return true;
       }
     } else {
@@ -287,11 +287,25 @@ const knightCheck = (updatedBoard, kingCell, kingColor) => {
         return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell - 1))
       })
 
-      if (checkCell.piece === "Knight" && checkCell.pieceColor === kingColor) {
+      if (checkCell.piece === "Knight" && checkCell.pieceColor === attackColor) {
         return true;
       }
     }
   }
   
   return false
+}
+
+const getCheckCell = (updatedBoard, row, cell, checkingPieces, attackColor) => {
+  let checkCell = null;
+  checkCell = updatedBoard.find(function(e) {
+    return (e.row === row && e.cell === cell)
+  })
+
+  if (checkCell.piece !== "") {
+    return (checkingPieces.includes(checkCell.piece) && checkCell.pieceColor === attackColor) ? true : false
+  } else {
+    return "empty"
+  }
+  
 }
