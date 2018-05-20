@@ -255,7 +255,6 @@ const getCheckCell = (updatedBoard, row, cell, checkingPieces, attackColor) => {
     return (e.row === row && e.cell === cell)
   })
 
-  console.log(checkCell)
   if (checkingPieces.includes(checkCell.piece) && checkCell.pieceColor === attackColor) {
     return true
   } else if (checkCell.piece && checkCell.pieceColor !== attackColor) {
