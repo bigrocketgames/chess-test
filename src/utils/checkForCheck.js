@@ -103,101 +103,53 @@ const verticalCheck = (updatedBoard, kingCell, attackColor) => {
 }
 
 const diagonalCheck = (updatedBoard, kingCell, attackColor) => {
-  let checkCell = null;
+  const checkingPieces = ["Bishop", "Queen"]
   const movesUp = kingCell.row - 1;
   const movesDown = 8 - kingCell.row;
   const movesRight = 8 - kingCell.cell;
   const movesLeft = kingCell.cell - 1;
 
   // check to the top right - -vert, +hor
-  if (movesUp < movesRight) {
-    for (let i = 1; i <= movesUp; i++) {
-      checkCell = updatedBoard.find(function(e) {
-        return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell + i))
-      })
-
-      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
-        return true;
-      }
+  const upRight = (movesUp < movesRight) ? movesUp : movesRight
+  for (let i = 1; i <= upRight; i++) {
+    const result = getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell + i, checkingPieces, attackColor)
+    if (result === "teammate") {
+      break;
+    } else if (result) {
+      return true
     }
-  } else {
-    for (let i = 1; i <= movesRight; i++) {
-      checkCell = updatedBoard.find(function(e) {
-        return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell + i))
-      })
-
-      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
-        return true;
-      }
-    }
-
   }
+  
   // check to the top left - -vert, -hor
-  if (movesUp < movesLeft) {
-    for (let i = 1; i <= movesUp; i++) {
-      checkCell = updatedBoard.find(function(e) {
-        return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell - i))
-      })
-
-      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
-        return true;
-      }
-    }
-  } else {
-    for (let i = 1; i <= movesLeft; i++) {
-      checkCell = updatedBoard.find(function(e) {
-        return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell - i))
-      })
-
-      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
-        return true;
-      }
+  const upLeft = (movesUp < movesLeft) ? movesUp : movesRight
+  for (let i = 1; i <= upLeft; i++) {
+    const result = getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell -i, checkingPieces, attackColor)
+    if (result === "teammate") {
+      break;
+    } else if (result) {
+      return true
     }
   }
 
   // check to the bottom right - +vert, +hor
-  if (movesDown < movesRight) {
-    for (let i = 1; i <= movesDown; i++) {
-      checkCell = updatedBoard.find(function(e) {
-        return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell + i))
-      })
-
-      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
-        return true;
+  const downRight = (movesDown < movesRight) ? movesDown : movesRight
+    for (let i = 1; i <= downRight; i++) {
+      const result = getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell + i, checkingPieces, attackColor)
+      if (result === "teammate") {
+        break;
+      } else if (result) {
+        return true
       }
     }
-  } else {
-    for (let i = 1; i <= movesRight; i++) {
-      checkCell = updatedBoard.find(function(e) {
-        return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell + i))
-      })
-
-      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
-        return true;
-      }
-    }
-  }
 
   // check to the bottom left - +vert, -hor
-  if (movesDown < movesLeft) {
-    for (let i = 1; i <= movesDown; i++) {
-      checkCell = updatedBoard.find(function(e) {
-        return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell - i))
-      })
-
-      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
-        return true;
-      }
-    }
-  } else {
-    for (let i = 1; i <= movesLeft; i++) {
-      checkCell = updatedBoard.find(function(e) {
-        return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell - i))
-      })
-
-      if ((checkCell.piece === "Bishop" || checkCell.piece === "Queen") && checkCell.pieceColor === attackColor) {
-        return true;
-      }
+  const downLeft = (movesDown < movesLeft) ? movesDown : movesLeft
+  for (let i = 1; i <= downLeft; i++) {
+    const result = getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell - i, checkingPieces, attackColor)
+    if (result === "teammate") {
+      break;
+    } else if (result) {
+      return true
     }
   }
 
@@ -303,9 +255,10 @@ const getCheckCell = (updatedBoard, row, cell, checkingPieces, attackColor) => {
     return (e.row === row && e.cell === cell)
   })
 
+  console.log(checkCell)
   if (checkingPieces.includes(checkCell.piece) && checkCell.pieceColor === attackColor) {
     return true
-  } else if (checkingPieces.includes(checkCell.piece) && checkCell.pieceColor !== attackColor) {
+  } else if (checkCell.piece && checkCell.pieceColor !== attackColor) {
     return "teammate"
   }
   
