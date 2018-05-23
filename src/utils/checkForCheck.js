@@ -52,7 +52,7 @@ const horizontalCheck = (updatedBoard, kingCell, attackColor) => {
   // check to the right
   for (let i = 1; i <= movesRight; i++) {
     const result = getCheckCell(updatedBoard, kingCell.row, kingCell.cell + i, checkingPieces, attackColor);
-    if (result === "teammate") {
+    if (result === "no threat") {
       break;
     } else if (result) {
       return true
@@ -62,7 +62,7 @@ const horizontalCheck = (updatedBoard, kingCell, attackColor) => {
   // check to the left
   for (let i = 1; i <= movesLeft; i++) {
     const result = getCheckCell(updatedBoard, kingCell.row, kingCell.cell - i, checkingPieces, attackColor);
-    if (result === "teammate") {
+    if (result === "no threat") {
       break;
     } else if (result) {
       return true
@@ -79,7 +79,7 @@ const verticalCheck = (updatedBoard, kingCell, attackColor) => {
   // check up the board
   for (let i = 1; i <= movesUp; i++) {
     const result = getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell, checkingPieces, attackColor)
-    if (result === "teammate") {
+    if (result === "no threat") {
       break;
     } else if (result) {
       return true
@@ -89,7 +89,7 @@ const verticalCheck = (updatedBoard, kingCell, attackColor) => {
   // check down the board
   for (let i = 1; i <= movesDown; i++) {
     const result = getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell, checkingPieces, attackColor)
-    if (result === "teammate") {
+    if (result === "no threat") {
       break;
     } else if (result) {
       return true
@@ -110,7 +110,7 @@ const diagonalCheck = (updatedBoard, kingCell, attackColor) => {
   const upRight = (movesUp < movesRight) ? movesUp : movesRight
   for (let i = 1; i <= upRight; i++) {
     const result = getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell + i, checkingPieces, attackColor)
-    if (result === "teammate") {
+    if (result === "no threat") {
       break;
     } else if (result) {
       return true
@@ -121,7 +121,7 @@ const diagonalCheck = (updatedBoard, kingCell, attackColor) => {
   const upLeft = (movesUp < movesLeft) ? movesUp : movesLeft
   for (let i = 1; i <= upLeft; i++) {
     const result = getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell -i, checkingPieces, attackColor)
-    if (result === "teammate") {
+    if (result === "no threat") {
       break;
     } else if (result) {
       return true
@@ -132,7 +132,7 @@ const diagonalCheck = (updatedBoard, kingCell, attackColor) => {
   const downRight = (movesDown < movesRight) ? movesDown : movesRight
     for (let i = 1; i <= downRight; i++) {
       const result = getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell + i, checkingPieces, attackColor)
-      if (result === "teammate") {
+      if (result === "no threat") {
         break;
       } else if (result) {
         return true
@@ -143,7 +143,7 @@ const diagonalCheck = (updatedBoard, kingCell, attackColor) => {
   const downLeft = (movesDown < movesLeft) ? movesDown : movesLeft
   for (let i = 1; i <= downLeft; i++) {
     const result = getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell - i, checkingPieces, attackColor)
-    if (result === "teammate") {
+    if (result === "no threat") {
       break;
     } else if (result) {
       return true
@@ -254,8 +254,8 @@ const getCheckCell = (updatedBoard, row, cell, checkingPieces, attackColor) => {
 
   if (checkingPieces.includes(checkCell.piece) && checkCell.pieceColor === attackColor) {
     return true
-  } else if (checkCell.piece && checkCell.pieceColor !== attackColor) {
-    return "teammate"
+  } else if (checkCell.piece && (checkCell.pieceColor !== attackColor || !checkingPieces.includes(checkCell.piece))) {
+    return "no threat"
   }
   
 }
