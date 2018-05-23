@@ -9,7 +9,7 @@ import { updateMessageSuccess, resetMessageState } from '../redux/message/action
 import { moveSuccess, resetBoard } from '../redux/board/actions';
 import { addHistorySuccess, resetHistory } from '../redux/history/actions';
 import { canPieceMoveToNewCell } from '../utils/validMove';
-import { isKingChecked } from '../utils/checkForCheck';
+import { isKingChecked, checkMate } from '../utils/checkForCheck';
 
 class GameBoard extends Component {
   constructor(props) {
@@ -112,7 +112,7 @@ class GameBoard extends Component {
             errorMoveCell: cell.id
           })
         } else {
-          // if yes - then see if that produces a check
+          // if move is valid - then see if that produces a check
           if (isKingChecked(gameState.board, gameState.turnColor, pieceToMove, cell)) {
             // if yes - is it a checkmate
               // if yes - produce game winning message and lock board
