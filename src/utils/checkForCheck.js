@@ -38,13 +38,10 @@ export const isKingChecked = (board, turnColor, pieceToMove, cell, ownKing = fal
   return false
 }
 
-export const willKingBeChecked = () => {
-  //check if king will be checked if king moves to the new space
-}
-
 export const checkMate = () => {
   // check this only if a king is checked - return true or false
   // check this by testing for spots the king could perhaps move and if they are safe spaces
+  
 }
 
 const horizontalCheck = (updatedBoard, kingCell, attackColor) => {
@@ -121,7 +118,7 @@ const diagonalCheck = (updatedBoard, kingCell, attackColor) => {
   }
   
   // check to the top left - -vert, -hor
-  const upLeft = (movesUp < movesLeft) ? movesUp : movesRight
+  const upLeft = (movesUp < movesLeft) ? movesUp : movesLeft
   for (let i = 1; i <= upLeft; i++) {
     const result = getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell -i, checkingPieces, attackColor)
     if (result === "teammate") {
