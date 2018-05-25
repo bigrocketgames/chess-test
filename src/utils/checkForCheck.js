@@ -20,6 +20,12 @@ export const isKingChecked = (board, turnColor, pieceToMove, cell, ownKing = fal
 
   // determine if checked from a horizontal attack
   if (horizontalCheck(updatedBoard, kingToCheck, attackColor) || verticalCheck(updatedBoard, kingToCheck, attackColor) || diagonalCheck(updatedBoard, kingToCheck, attackColor) || knightCheck(updatedBoard, kingToCheck, attackColor)){
+    // perhaps do a singular check on each type of check 
+    
+    // the one that returns true is then used to check for a blockable position
+    // this can be done by looping through the spaces that the attacking piece
+    
+    
     return true
   }
 
@@ -77,7 +83,7 @@ export const checkMate = (board, turnColor, pieceToMove, cell) => {
     }
   }
 
-  // need to have this return true if it gets to this point
+  // need to have this return true if it gets to this point to signify that the king is in checkmate
   return true
   
 }
