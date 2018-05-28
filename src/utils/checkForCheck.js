@@ -73,8 +73,6 @@ export const checkMate = (board, turnColor, pieceToMove, cell) => {
           const testKing = getKing(testBoard, kingColor)
           
           if (!horizontalCheck(updatedBoard, testKing, turnColor) && !verticalCheck(updatedBoard, testKing, turnColor) && !diagonalCheck(updatedBoard, testKing, turnColor) && !knightCheck(updatedBoard, testKing, turnColor)) {
-            console.log(testKing, testBoard)
-            console.log(horizontalCheck(updatedBoard, testKing, turnColor), verticalCheck(updatedBoard, testKing, turnColor), diagonalCheck(updatedBoard, testKing, turnColor), knightCheck(updatedBoard, testKing, turnColor))
             return false
           }
         }
