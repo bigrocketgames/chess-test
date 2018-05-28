@@ -2,8 +2,7 @@
 export const isKingChecked = (board, turnColor, pieceToMove, cell, ownKing = false) => {
   let kingToCheck = null;
   let attackColor = null;
-  
-  const updatedBoard = updateBoard(board, pieceToMove, cell)
+  const updatedBoard = updateBoard(board, pieceToMove, cell);
 
   if (ownKing) {
     const kingColor = turnColor;
@@ -20,37 +19,10 @@ export const isKingChecked = (board, turnColor, pieceToMove, cell, ownKing = fal
 
   // determine if checked from a horizontal attack
   if (horizontalCheck(updatedBoard, kingToCheck, attackColor) || verticalCheck(updatedBoard, kingToCheck, attackColor) || diagonalCheck(updatedBoard, kingToCheck, attackColor) || knightCheck(updatedBoard, kingToCheck, attackColor)){
-    // perhaps do a singular check on each type of check 
-    
-    // the one that returns true is then used to check for a blockable position
-    // this can be done by looping through the spaces that the attacking piece
-    
-    
     return true
   }
 
   return false
-}
-
-const getKing = (board, kingColor) => {
-  return board.find(function(e) {
-    return ((e.piece === "King") && (e.pieceColor === kingColor))
-  })
-}
-
-const updateBoard = (board, pieceToMove, cell) => {
-  // copying board array so as not to modify the original
-  let boardToUpdate = JSON.parse(JSON.stringify(board))
-
-  // update the copy of the board to proposed move
-  boardToUpdate[cell.id-1].piece =  pieceToMove.piece
-  boardToUpdate[cell.id-1].pieceColor = pieceToMove.pieceColor
-  boardToUpdate[cell.id-1].value = pieceToMove.value
-  boardToUpdate[pieceToMove.id-1].piece = ""
-  boardToUpdate[pieceToMove.id-1].pieceColor = ""
-  boardToUpdate[pieceToMove.id-1].value = ""
-
-  return boardToUpdate
 }
 
 export const checkMate = (board, turnColor, pieceToMove, cell) => {
@@ -86,7 +58,28 @@ export const checkMate = (board, turnColor, pieceToMove, cell) => {
   
 }
 
-const horizontalCheck = (updatedBoard, kingCell, attackColor) => {
+const getKing = (board, kingColor) => {
+  return board.find(function(e) {
+    return ((e.piece === "King") && (e.pieceColor === kingColor))
+  })
+}
+
+export const updateBoard = (board, pieceToMove, cell) => {
+  // copying board array so as not to modify the original
+  let boardToUpdate = JSON.parse(JSON.stringify(board))
+
+  // update the copy of the board to proposed move
+  boardToUpdate[cell.id-1].piece =  pieceToMove.piece
+  boardToUpdate[cell.id-1].pieceColor = pieceToMove.pieceColor
+  boardToUpdate[cell.id-1].value = pieceToMove.value
+  boardToUpdate[pieceToMove.id-1].piece = ""
+  boardToUpdate[pieceToMove.id-1].pieceColor = ""
+  boardToUpdate[pieceToMove.id-1].value = ""
+
+  return boardToUpdate
+}
+
+export const horizontalCheck = (updatedBoard, kingCell, attackColor) => {
   const checkingPieces = ["Rook", "Queen"]
   const movesRight = 8 - kingCell.cell;
   const movesLeft = kingCell.cell - 1;
@@ -114,7 +107,7 @@ const horizontalCheck = (updatedBoard, kingCell, attackColor) => {
   return false
 }
 
-const verticalCheck = (updatedBoard, kingCell, attackColor) => {
+export const verticalCheck = (updatedBoard, kingCell, attackColor) => {
   const checkingPieces = ["Rook", "Queen"]
   const movesUp = kingCell.row - 1;
   const movesDown = 8 - kingCell.row;
@@ -141,7 +134,7 @@ const verticalCheck = (updatedBoard, kingCell, attackColor) => {
   return false
 }
 
-const diagonalCheck = (updatedBoard, kingCell, attackColor) => {
+export const diagonalCheck = (updatedBoard, kingCell, attackColor) => {
   const checkingPieces = ["Bishop", "Queen"]
   const movesUp = kingCell.row - 1;
   const movesDown = 8 - kingCell.row;
@@ -196,28 +189,26 @@ const diagonalCheck = (updatedBoard, kingCell, attackColor) => {
 }
 
 // check for knights that put king in check
-const knightCheck = (updatedBoard, kingCell, attackColor) => {
-  let checkCell = null;
+export const knightCheck = (updatedBoard, kingCell, attackColor) => {
+  const checkingPieces = ["Knight"];
   const movesUp = (kingCell.row - 1 > 2) ? 2 : kingCell.row - 1
   const movesDown = (8 - kingCell.row > 2) ? 2 : 8 - kingCell.row
 
   // check top right - -vert +hor
   for (let i = 1; i <= movesUp; i++) {
     if (i === 1) {
-      checkCell = updatedBoard.find(function(e) {
-        return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell + 2))
-      })
-
-      if ((checkCell.piece === "Knight") && checkCell.pieceColor === attackColor) {
-        return true;
+      const result = getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell + 2, checkingPieces, attackColor)
+      if (result === "no threat") {
+        break;
+      } else if (result) {
+        return true
       }
     } else {
-      checkCell = updatedBoard.find(function(e) {
-        return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell + 1))
-      })
-
-      if (checkCell.piece === "Knight" && checkCell.pieceColor === attackColor) {
-        return true;
+      const result = getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell + 1, checkingPieces, attackColor)
+      if (result === "no threat") {
+        break;
+      } else if (result) {
+        return true
       }
     }
   }
@@ -225,20 +216,18 @@ const knightCheck = (updatedBoard, kingCell, attackColor) => {
   // check top left - -vert -hor
   for (let i = 1; i <= movesUp; i++) {
     if (i === 1) {
-      checkCell = updatedBoard.find(function(e) {
-        return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell - 2))
-      })
-
-      if (checkCell.piece === "Knight" && checkCell.pieceColor === attackColor) {
-        return true;
+      const result = getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell - 2, checkingPieces, attackColor)
+      if (result === "no threat") {
+        break;
+      } else if (result) {
+        return true
       }
     } else {
-      checkCell = updatedBoard.find(function(e) {
-        return ((e.row === kingCell.row - i) && (e.cell === kingCell.cell - 1))
-      })
-
-      if (checkCell.piece === "Knight" && checkCell.pieceColor === attackColor) {
-        return true;
+      const result = getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell - 1, checkingPieces, attackColor)
+      if (result === "no threat") {
+        break;
+      } else if (result) {
+        return true
       }
     }
   }
@@ -246,20 +235,18 @@ const knightCheck = (updatedBoard, kingCell, attackColor) => {
   // check bottom right - +vert +hor
   for (let i = 1; i <= movesDown; i++) {
     if (i === 1) {
-      checkCell = updatedBoard.find(function(e) {
-        return ((e.row  === kingCell.row + i) && (e.cell === kingCell.cell + 2))
-      })
-
-      if (checkCell.piece === "Knight" && checkCell.pieceColor === attackColor) {
-        return true;
+      const result = getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell + 2, checkingPieces, attackColor)
+      if (result === "no threat") {
+        break;
+      } else if (result) {
+        return true
       }
     } else {
-      checkCell = updatedBoard.find(function(e) {
-        return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell + 1))
-      })
-
-      if (checkCell.piece === "Knight" && checkCell.pieceColor === attackColor) {
-        return true;
+      const result = getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell + 1, checkingPieces, attackColor)
+      if (result === "no threat") {
+        break;
+      } else if (result) {
+        return true
       }
     }
   }
@@ -267,20 +254,18 @@ const knightCheck = (updatedBoard, kingCell, attackColor) => {
   // check bottom left - +vert - hor
   for (let i = 1; i <= movesDown; i++) {
     if (i === 1) {
-      checkCell = updatedBoard.find(function(e) {
-        return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell - 2))
-      })
-
-      if (checkCell.piece === "Knight" && checkCell.pieceColor === attackColor) {
-        return true;
+      const result = getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell - 2, checkingPieces, attackColor)
+      if (result === "no threat") {
+        break;
+      } else if (result) {
+        return true
       }
     } else {
-      checkCell = updatedBoard.find(function(e) {
-        return ((e.row === kingCell.row + i) && (e.cell === kingCell.cell - 1))
-      })
-
-      if (checkCell.piece === "Knight" && checkCell.pieceColor === attackColor) {
-        return true;
+      const result = getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell - 1, checkingPieces, attackColor)
+      if (result === "no threat") {
+        break;
+      } else if (result) {
+        return true
       }
     }
   }
@@ -288,15 +273,19 @@ const knightCheck = (updatedBoard, kingCell, attackColor) => {
   return false
 }
 
-const getCheckCell = (updatedBoard, row, cell, checkingPieces, attackColor) => {
+export const getCheckCell = (updatedBoard, row, cell, checkingPieces, attackColor) => {
   let checkCell = null;
   checkCell = updatedBoard.find(function(e) {
     return (e.row === row && e.cell === cell)
   })
 
-  if (checkingPieces.includes(checkCell.piece) && checkCell.pieceColor === attackColor) {
-    return true
-  } else if (checkCell.piece && (checkCell.pieceColor !== attackColor || !checkingPieces.includes(checkCell.piece))) {
+  if (checkCell) {
+    if (checkingPieces.includes(checkCell.piece) && checkCell.pieceColor === attackColor) {
+      return true
+    } else if (checkCell.piece && (checkCell.pieceColor !== attackColor || !checkingPieces.includes(checkCell.piece))) {
+      return "no threat"
+    }
+  } else {
     return "no threat"
   }
   
