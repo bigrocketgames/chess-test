@@ -10,6 +10,7 @@ import { moveSuccess, resetBoard } from '../redux/board/actions';
 import { addHistorySuccess, resetHistory } from '../redux/history/actions';
 import { canPieceMoveToNewCell } from '../utils/validMove';
 import { isKingChecked, checkMate } from '../utils/checkForCheck';
+import { canBlockCheck } from '../utils/canBlockCheck';
 
 class GameBoard extends Component {
   constructor(props) {
@@ -99,6 +100,7 @@ class GameBoard extends Component {
 
       // check if piece can move to selected space
       if (canPieceMoveToNewCell(gameState.board, pieceToMove.piece, pieceToMove, cell)) {
+        
         // check to make sure move doesn't put own king in check
         if (isKingChecked(gameState.board, gameState.turnColor, pieceToMove, cell, true)) {
           // if no - produce error message and update message box
@@ -112,9 +114,19 @@ class GameBoard extends Component {
             errorMoveCell: cell.id
           })
         } else {
-          // if move is valid - then see if that produces a check
+          // if move is valid - then see if that produces a check on enemy king
           if (isKingChecked(gameState.board, gameState.turnColor, pieceToMove, cell)) {
-            // if yes - is it a checkmate
+            // if yes - can the check be blocked
+            if (canBlockCheck(gameState.board, gameState.turnColor, pieceToMove, cell)) {
+              // if yes - produce check message
+              pastGameState = gameState;
+              message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!  ${nextColor} your king is in check and it is your turn.`
+              const historyMessage = `Moved ${pieceToMove.pieceColor} ${pieceToMove.piece} from cell ${pieceToMove.space} to cell ${cell.space} - check`
+              history = {gameState: pastGameState, message: historyMessage}
+
+              this.successfulMoveUpdate(pieceToMove.piece, pieceToMove, cell, message, history)
+            } else {
+              // if no - is it a checkmate
               if (checkMate(gameState.board, gameState.turnColor, pieceToMove, cell)) {
                 // if yes - produce game winning message and lock board
                 pastGameState = gameState;
@@ -132,6 +144,7 @@ class GameBoard extends Component {
 
                 this.successfulMoveUpdate(pieceToMove.piece, pieceToMove, cell, message, history)
               }
+            }
           } else {
             // if no - produce move message
             pastGameState = gameState;
