@@ -15,11 +15,11 @@ export const canBlockCheck = (board, turnColor, pieceToMove, cell) => {
     return (e.piece === "King" && e.pieceColor === underAttackColor)
   })
 
-  const attackDirection = getAttackDirection(attackingPiece, kingUnderAttack)
-
   if (horizontalCheck(updatedBoard, attackingPiece, underAttackColor) || verticalCheck(updatedBoard, attackingPiece, underAttackColor) || diagonalCheck(updatedBoard, attackingPiece, underAttackColor) || knightCheck(updatedBoard, attackingPiece, underAttackColor)) {
     return true
   }
+
+  const attackDirection = getAttackDirection(attackingPiece, kingUnderAttack)
 
   return false
 }
