@@ -6,20 +6,19 @@ export const canBlockCheck = (board, turnColor, pieceToMove, cell) => {
   const attackingPiece = updatedBoard.find(function(e) {
     return (e.row === cell.row && e.cell === cell.cell)
   })
+
+  if (attackingPiece.piece === "Knight") {
+    return false
+  }
+
   const kingUnderAttack = updatedBoard.find(function(e) {
     return (e.piece === "King" && e.pieceColor === underAttackColor)
   })
 
-  if (horizontalCheck(updatedBoard, attackingPiece, underAttackColor) || verticalCheck(updatedBoard, attackingPiece, underAttackColor) || diagonalCheck(updatedBoard, attackingPiece, underAttackColor) || knightCheck(updatedBoard, attackingPiece, underAttackColor)) {
-    return true
-  }
-
   const attackDirection = getAttackDirection(attackingPiece, kingUnderAttack)
 
-  if (attackDirection === "Knight Attack") {
-    return false
-  } else {
-
+  if (horizontalCheck(updatedBoard, attackingPiece, underAttackColor) || verticalCheck(updatedBoard, attackingPiece, underAttackColor) || diagonalCheck(updatedBoard, attackingPiece, underAttackColor) || knightCheck(updatedBoard, attackingPiece, underAttackColor)) {
+    return true
   }
 
   return false
@@ -30,9 +29,7 @@ const getAttackDirection = (attackingPiece, kingUnderAttack) => {
   attackDetails.rowChange = attackingPiece.row - kingUnderAttack.row;
   attackDetails.cellChange = attackingPiece.cell - kingUnderAttack.cell;
 
-  if (attackingPiece.piece === "Knight") {
-    return "Knight Attack"
-  } else if (attackDetails.rowChange !== 0 && attackDetails.cellChange === 0) {
+  if (attackDetails.rowChange !== 0 && attackDetails.cellChange === 0) {
     if (attackDetails.rowChange < 0) {
       // King is in lower row - attacking piece above
       return "BottomUp"
