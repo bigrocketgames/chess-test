@@ -167,62 +167,6 @@ class GameBoard extends Component {
           errorMoveCell: cell.id
         })
       }
-      
-      // check if piece can be captured and game won if the clicked on space is occupied by the other team's color.
-      // if (cell.pieceColor !== pieceToMove.pieceColor && cell.pieceColor !== "") {
-      //   if (canPieceMoveToNewCell(gameState.board, pieceToMove.piece, pieceToMove, cell)) {
-
-      //     // check if game is won and return result as necessary
-      //     // if (gameWon(gameState.board, cell.pieceColor, cell)) {
-      //     //   pastGameState = gameState;
-      //     //   message = `You have captured the ${cell.pieceColor} ${cell.piece} in cell ${cell.space} with your ${pieceToMove.pieceColor} ${pieceToMove.piece}!  ${pieceToMove.pieceColor} WINS!`
-      //     //   const historyMessage = `Captured the ${cell.pieceColor} ${cell.piece} in cell ${cell.space} with the ${pieceToMove.pieceColor} ${pieceToMove.piece} from cell ${pieceToMove.space} to win!`
-      //     //   history = {gameState: pastGameState, message: historyMessage}
-      //     // } else {
-      //     //   pastGameState = gameState;
-      //     //   message = `You have captured the ${cell.pieceColor} ${cell.piece} in cell ${cell.space} with your ${pieceToMove.pieceColor} ${pieceToMove.piece}!  ${nextColor} it is your turn.`
-      //     //   const historyMessage = `Captured the ${cell.pieceColor} ${cell.piece} in cell ${cell.space} with the ${pieceToMove.pieceColor} ${pieceToMove.piece} from cell ${pieceToMove.space}`
-      //     //   history = {gameState: pastGameState, message: historyMessage}
-      //     // }
-
-      //     isKingChecked(gameState.board, gameState.turnColor);
-
-      //     this.successfulMoveUpdate(pieceToMove.piece, pieceToMove, cell, message, history);
-
-      //   } else {
-      //     // dispatch to message to display that an invalid move was attempted
-      //     message = `You can not move ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!`
-      //     updateMessageSuccess(message)
-  
-      //     // Set local state for to show which cell was erroneously attempted to move to
-      //     this.setState({
-      //       ...this.state,
-      //       errorMoveCell: cell.id
-      //     })
-      //   }
-      // } else if (cell.pieceColor === "") {
-
-      //   // check to see if the proposed move is valid and update as needed
-      //   if (canPieceMoveToNewCell(gameState.board, pieceToMove.piece, pieceToMove, cell)) {
-      //     pastGameState = gameState;
-      //     message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!  ${nextColor} it is your turn.`
-      //     const historyMessage = `Moved ${pieceToMove.pieceColor} ${pieceToMove.piece} from cell ${pieceToMove.space} to cell ${cell.space}`
-      //     const history = {gameState: pastGameState, message: historyMessage}
-
-      //     this.successfulMoveUpdate(pieceToMove.piece, pieceToMove, cell, message, history);
-          
-      //   } else {
-      //     // dispatch to message to display that an invalid move was attempted
-      //     message = `You can not move ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!`
-      //     updateMessageSuccess(message)
-  
-      //     // Set local state for to show which cell was erroneously attempted to move to
-      //     this.setState({
-      //       ...this.state,
-      //       errorMoveCell: cell.id
-      //     })
-      //   }
-      // }
     }
   }
 
