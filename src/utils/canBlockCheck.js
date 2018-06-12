@@ -1,4 +1,5 @@
-import { updateBoard, horizontalCheck, verticalCheck, diagonalCheck, knightCheck } from './checkForCheck';
+import { updateBoard } from './checkForCheck';
+import { horizontalCheck, verticalCheck, diagonalCheck, knightCheck } from './checkDirections';
 
 export const canBlockCheck = (board, turnColor, pieceToMove, cell) => {
   const underAttackColor = (turnColor === "White") ? "Black" : "White";
@@ -76,10 +77,6 @@ const canBlockAttack = (updatedBoard, kingUnderAttack, attackingPiece, underAtta
   } else if (attackDirection === "TopDown") {
 
   }
-}
-
-const verticalBlock = (/* need to figure out what we want to use here */) => {
-
 }
 
 const getSpace = (board, row, cell) => {
