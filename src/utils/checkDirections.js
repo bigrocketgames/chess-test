@@ -26,8 +26,8 @@ export const horizontalCheck = (updatedBoard, kingCell, attackColor) => {
   return false
 }
 
-export const verticalCheck = (updatedBoard, kingCell, attackColor) => {
-  const checkingPieces = ["Rook", "Queen"]
+export const verticalCheck = (updatedBoard, kingCell, attackColor, forBlockVertical = false) => {
+  const checkingPieces = forBlockVertical ? ["Rook", "Queen", "Pawn"] : ["Rook", "Queen"]
   const movesUp = kingCell.row - 1;
   const movesDown = 8 - kingCell.row;
   // check up the board
@@ -53,8 +53,8 @@ export const verticalCheck = (updatedBoard, kingCell, attackColor) => {
   return false
 }
 
-export const diagonalCheck = (updatedBoard, kingCell, attackColor) => {
-  const checkingPieces = ["Bishop", "Queen"]
+export const diagonalCheck = (updatedBoard, kingCell, attackColor, forBlockDiagonal = false) => {
+  const checkingPieces = forBlockDiagonal ? ["Bishop", "Queen", "Pawn"] : ["Bishop", "Queen"]
   const movesUp = kingCell.row - 1;
   const movesDown = 8 - kingCell.row;
   const movesRight = 8 - kingCell.cell;
