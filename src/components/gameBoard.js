@@ -12,21 +12,16 @@ import { canPieceMoveToNewCell } from '../utils/validMove';
 import { isKingChecked, checkMate } from '../utils/checkForCheck';
 import { canBlockCheck } from '../utils/canBlockCheck';
 
+const initialState = {
+  selectedCell: 0,
+  readyToMove: 'no',
+  cellMoveFrom: null,
+  errorMoveCell: 0,
+  successfullMoveCell: 0
+}
+
 class GameBoard extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      selectedCell: 0,
-      readyToMove: 'no',
-      cellMoveFrom: null,
-      errorMoveCell: 0,
-      successfullMoveCell: 0
-    }
-
-    this.handlCellClick = this.handleCellClick.bind(this)
-    this.resetBoard = this.resetBoard.bind(this)
-  }
+  state = initialState
 
   // check to see if history has been rewinded and clear local state to be ready to select a fresh piece
   componentDidUpdate(prevProps, prevState) {
@@ -42,16 +37,12 @@ class GameBoard extends Component {
   }
 
   // reset the board to the beginning game state
-  resetBoard() {
+  resetBoard = () => {
     this.props.resetBoard();
     this.props.resetHistory();
     this.props.resetMessageState();
     this.setState({
-      selectedCell: 0,
-      readyToMove: 'no',
-      cellMoveFrom: null,
-      errorMoveCell: 0,
-      successfullMoveCell: 0
+      ...initialState
     })
   }
 
@@ -83,7 +74,7 @@ class GameBoard extends Component {
     const { readyToMove, pieceToMove } = this.state
     const { updateMessageSuccess, gameState } = this.props
 
-    // Select the space if it isn't empty.
+    // Select the piece the player wishes to move.
     if (cell.piece !== "" && cell.pieceColor === gameState.turnColor) {
       message = `You have chosen the ${cell.pieceColor} ${cell.piece} in cell ${cell.space}.`
       updateMessageSuccess(message)

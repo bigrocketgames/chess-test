@@ -10,13 +10,8 @@ import { updateMessageSuccess } from '../redux/message/actions';
 import { Button } from '../containers/button';
 
 class History extends Component {
-  constructor(props){
-    super(props)
 
-    this.undoMoveOnClick = this.undoMoveOnClick.bind(this)
-  }
-
-  undoMoveOnClick(lastGameState){
+  undoMoveOnClick = (lastGameState) => {
     this.props.rewindBoard(lastGameState);
     this.props.rewindHistory();
     const message = "You have undone that move."
