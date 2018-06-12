@@ -178,6 +178,7 @@ class GameBoard extends Component {
 }
 
 GameBoard.propTypes = {
+  initialState: PropTypes.object,
   gameState: PropTypes.object,
   history: PropTypes.array,
   updateMessageSuccess: PropTypes.func,
