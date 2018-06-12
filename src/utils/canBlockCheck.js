@@ -85,11 +85,31 @@ const canBlockAttack = (updatedBoard, kingUnderAttack, attackingPiece, underAtta
       const testCell = getSpace(updatedBoard, kingUnderAttack.row + i, kingUnderAttack.cell)
 
       // check all directions if space can get occupied by an under attack piece
-      if (horizontalCheck(updatedBoard, attackingPiece, underAttackColor) || verticalCheck(updatedBoard, attackingPiece, underAttackColor) || diagonalCheck(updatedBoard, attackingPiece, underAttackColor) || knightCheck(updatedBoard, attackingPiece, underAttackColor)) {
+      if (horizontalCheck(updatedBoard, testCell, underAttackColor) || verticalCheck(updatedBoard, testCell, underAttackColor) || diagonalCheck(updatedBoard, testCell, underAttackColor) || knightCheck(updatedBoard, testCell, underAttackColor)) {
         return true
       }
     }
-  } 
+  } else if (attackDirection === "RightToLeft") {
+    for (let i = 1; i < Math.abs(cellChange); i++) {
+      // get next cell left of king
+      const testCell = getSpace(updatedBoard, kingUnderAttack.row, kingUnderAttack.cell - i)
+
+      // check all directions if space can get occupied by an under attack piece
+      if (horizontalCheck(updatedBoard, testCell, underAttackColor) || verticalCheck(updatedBoard, testCell, underAttackColor) || diagonalCheck(updatedBoard, testCell, underAttackColor) || knightCheck(updatedBoard, testCell, underAttackColor)) {
+        return true
+      }
+    }
+  } else if (attackDirection === "LeftToRight") {
+    for (let i = 1; i < Math.abs(cellChange); i++) {
+      // get next cell right of king
+      const testCell = getSpace(updatedBoard, kingUnderAttack.row, kingUnderAttack.cell + i)
+
+      // check all directions if space can get occupied by an under attack piece
+      if (horizontalCheck(updatedBoard, testCell, underAttackColor) || verticalCheck(updatedBoard, testCell, underAttackColor) || diagonalCheck(updatedBoard, testCell, underAttackColor) || knightCheck(updatedBoard, testCell, underAttackColor)) {
+        return true
+      }
+    }
+  }
 
   return false
 }
