@@ -22,6 +22,8 @@ export const canBlockCheck = (board, turnColor, pieceToMove, cell) => {
 
   const attackDirection = getAttackDirection(attackingPiece, kingUnderAttack)
 
+  if (canBlockAttack(updatedBoard, kingUnderAttack, attackingPiece, underAttackColor, attackDirection)) return true
+
   return false
 }
 
@@ -68,15 +70,28 @@ const canBlockAttack = (updatedBoard, kingUnderAttack, attackingPiece, underAtta
   const cellChange = attackingPiece.cell - kingUnderAttack.cell;
 
   if (attackDirection === "BottomUp") {
-    for (let i = 1; i <= Math.abs(rowChange); i++) {
+    for (let i = 1; i < Math.abs(rowChange); i++) {
       // get next cell above king
       const testCell = getSpace(updatedBoard, kingUnderAttack.row - i, kingUnderAttack.cell)
 
       // check all directions if space can get occupied by an under attack piece
+      if (horizontalCheck(updatedBoard, testCell, underAttackColor) || verticalCheck(updatedBoard, testCell, underAttackColor) || diagonalCheck(updatedBoard, testCell, underAttackColor) || knightCheck(updatedBoard, testCell, underAttackColor)) {
+        return true
+      }
     }
   } else if (attackDirection === "TopDown") {
+    for (let i = 1; i < Math.abs(rowChange); i++) {
+      // get next cell below king
+      const testCell = getSpace(updatedBoard, kingUnderAttack.row + i, kingUnderAttack.cell)
 
-  }
+      // check all directions if space can get occupied by an under attack piece
+      if (horizontalCheck(updatedBoard, attackingPiece, underAttackColor) || verticalCheck(updatedBoard, attackingPiece, underAttackColor) || diagonalCheck(updatedBoard, attackingPiece, underAttackColor) || knightCheck(updatedBoard, attackingPiece, underAttackColor)) {
+        return true
+      }
+    }
+  } 
+
+  return false
 }
 
 const getSpace = (board, row, cell) => {
