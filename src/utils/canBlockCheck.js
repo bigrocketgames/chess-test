@@ -128,8 +128,8 @@ const canBlockAttack = (updatedBoard, kingUnderAttack, attackingPiece, underAtta
   // King is in lower row and to the left of the attacking piece
   } else if (attackDirection === "BottomLeftToTopRight") {
     for (let i = 1; i < diagonalChange; i++) {
-      // get next cell left of king
-      const testCell = getSpace(updatedBoard, kingUnderAttack.row - i, kingUnderAttack.cell - i)
+      // get next cell right and above the king
+      const testCell = getSpace(updatedBoard, kingUnderAttack.row - i, kingUnderAttack.cell + i)
 
       // check all directions if space can get occupied by an under attack piece
       if (horizontalCheck(updatedBoard, testCell, underAttackColor) || verticalCheck(updatedBoard, testCell, underAttackColor) || diagonalCheck(updatedBoard, testCell, underAttackColor) || knightCheck(updatedBoard, testCell, underAttackColor)) {
@@ -138,10 +138,26 @@ const canBlockAttack = (updatedBoard, kingUnderAttack, attackingPiece, underAtta
     }
   // King is in a higher row and to the right of the attacking piece
   } else if (attackDirection === "TopRightToBottomLeft") {
+    for (let i = 1; i < diagonalChange; i++) {
+      // get next cell left and below the king
+      const testCell = getSpace(updatedBoard, kingUnderAttack.row + i, kingUnderAttack.cell - i)
 
+      // check all directions if space can get occupied by an under attack piece
+      if (horizontalCheck(updatedBoard, testCell, underAttackColor) || verticalCheck(updatedBoard, testCell, underAttackColor) || diagonalCheck(updatedBoard, testCell, underAttackColor) || knightCheck(updatedBoard, testCell, underAttackColor)) {
+        return true
+      }
+    }
   // King is in a higher row and to the left of the attacking piece
   } else if (attackDirection === "TopLeftToBottomRight") {
+    for (let i = 1; i < diagonalChange; i++) {
+      // get next cell right and below the king
+      const testCell = getSpace(updatedBoard, kingUnderAttack.row + i, kingUnderAttack.cell + i)
 
+      // check all directions if space can get occupied by an under attack piece
+      if (horizontalCheck(updatedBoard, testCell, underAttackColor) || verticalCheck(updatedBoard, testCell, underAttackColor) || diagonalCheck(updatedBoard, testCell, underAttackColor) || knightCheck(updatedBoard, testCell, underAttackColor)) {
+        return true
+      }
+    }
   }
 
   return false
