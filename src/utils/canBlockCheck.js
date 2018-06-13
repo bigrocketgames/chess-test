@@ -8,6 +8,7 @@ export const canBlockCheck = (board, turnColor, pieceToMove, cell) => {
     return (e.row === cell.row && e.cell === cell.cell)
   })
 
+  // Return false if the attacking piece is a Knight because that check can not be blocked since it can jump pieces.
   if (attackingPiece.piece === "Knight") {
     return false
   }
@@ -16,12 +17,14 @@ export const canBlockCheck = (board, turnColor, pieceToMove, cell) => {
     return (e.piece === "King" && e.pieceColor === underAttackColor)
   })
 
+  // Return true if the piece that is checking the king can be captured on the next move by the team under attack
   if (horizontalCheck(updatedBoard, attackingPiece, underAttackColor) || verticalCheck(updatedBoard, attackingPiece, underAttackColor) || diagonalCheck(updatedBoard, attackingPiece, underAttackColor) || knightCheck(updatedBoard, attackingPiece, underAttackColor)) {
     return true
   }
 
   const attackDirection = getAttackDirection(attackingPiece, kingUnderAttack)
 
+  // If the attack can be blocked by the other team on the next move return true - so checkmate is not declared
   if (canBlockAttack(updatedBoard, kingUnderAttack, attackingPiece, underAttackColor, attackDirection)) return true
 
   return false
@@ -68,6 +71,7 @@ const getAttackDirection = (attackingPiece, kingUnderAttack) => {
 const canBlockAttack = (updatedBoard, kingUnderAttack, attackingPiece, underAttackColor, attackDirection) => {
   const rowChange = attackingPiece.row - kingUnderAttack.row;
   const cellChange = attackingPiece.cell - kingUnderAttack.cell;
+  const diagonalChange = (rowChange < cellChange) ? rowChange : cellChange
 
   if (attackDirection === "BottomUp") {
     for (let i = 1; i < Math.abs(rowChange); i++) {
@@ -109,6 +113,35 @@ const canBlockAttack = (updatedBoard, kingUnderAttack, attackingPiece, underAtta
         return true
       }
     }
+  // King is in lower row and to the right of the attacking piece
+  } else if (attackDirection === "BottomRightToTopLeft") {
+    for (let i = 1; i < diagonalChange; i++) {
+      // get next cell left and above the king
+      const testCell = getSpace(updatedBoard, kingUnderAttack.row - i, kingUnderAttack.cell - i)
+
+      // check all directions if space can get occupied by an under attack piece
+      if (horizontalCheck(updatedBoard, testCell, underAttackColor) || verticalCheck(updatedBoard, testCell, underAttackColor) || diagonalCheck(updatedBoard, testCell, underAttackColor) || knightCheck(updatedBoard, testCell, underAttackColor)) {
+        return true
+      }
+    }
+
+  // King is in lower row and to the left of the attacking piece
+  } else if (attackDirection === "BottomLeftToTopRight") {
+    for (let i = 1; i < diagonalChange; i++) {
+      // get next cell left of king
+      const testCell = getSpace(updatedBoard, kingUnderAttack.row - i, kingUnderAttack.cell - i)
+
+      // check all directions if space can get occupied by an under attack piece
+      if (horizontalCheck(updatedBoard, testCell, underAttackColor) || verticalCheck(updatedBoard, testCell, underAttackColor) || diagonalCheck(updatedBoard, testCell, underAttackColor) || knightCheck(updatedBoard, testCell, underAttackColor)) {
+        return true
+      }
+    }
+  // King is in a higher row and to the right of the attacking piece
+  } else if (attackDirection === "TopRightToBottomLeft") {
+
+  // King is in a higher row and to the left of the attacking piece
+  } else if (attackDirection === "TopLeftToBottomRight") {
+
   }
 
   return false
