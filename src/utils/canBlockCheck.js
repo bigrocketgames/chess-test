@@ -18,7 +18,7 @@ export const canBlockCheck = (board, turnColor, pieceToMove, cell) => {
   })
 
   // Return true if the piece that is checking the king can be captured on the next move by the team under attack
-  if (horizontalCheck(updatedBoard, attackingPiece, underAttackColor) || verticalCheck(updatedBoard, attackingPiece, underAttackColor) || diagonalCheck(updatedBoard, attackingPiece, underAttackColor) || knightCheck(updatedBoard, attackingPiece, underAttackColor)) {
+  if (horizontalCheck(updatedBoard, attackingPiece, underAttackColor) || verticalCheck(updatedBoard, attackingPiece, underAttackColor) || diagonalCheck(updatedBoard, attackingPiece, underAttackColor, true) || knightCheck(updatedBoard, attackingPiece, underAttackColor)) {
     return true
   }
 
@@ -71,7 +71,7 @@ const getAttackDirection = (attackingPiece, kingUnderAttack) => {
 const canBlockAttack = (updatedBoard, kingUnderAttack, attackingPiece, underAttackColor, attackDirection) => {
   const rowChange = attackingPiece.row - kingUnderAttack.row;
   const cellChange = attackingPiece.cell - kingUnderAttack.cell;
-  const diagonalChange = (rowChange < cellChange) ? rowChange : cellChange
+  const diagonalChange = (Math.abs(rowChange) < Math.abs(cellChange)) ? Math.abs(rowChange) : Math.abs(cellChange)
 
   if (attackDirection === "BottomUp") {
     for (let i = 1; i < Math.abs(rowChange); i++) {
