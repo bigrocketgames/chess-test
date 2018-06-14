@@ -27,11 +27,13 @@ export const horizontalCheck = (updatedBoard, kingCell, attackColor) => {
 }
 
 export const verticalCheck = (updatedBoard, kingCell, attackColor, forBlockVertical = false) => {
-  const checkingPieces = forBlockVertical ? ["Rook", "Queen", "Pawn"] : ["Rook", "Queen"]
+  let checkingPieces = ["Rook", "Queen"]
   const movesUp = kingCell.row - 1;
   const movesDown = 8 - kingCell.row;
   // check up the board
   for (let i = 1; i <= movesUp; i++) {
+    if ((i === 1 && attackColor === "Black") || (i ===2 && attackColor === "Black" && kingCell.row === 4)) checkingPieces = ["Rook", "Queen", "Pawn"]
+    
     const result = getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell, checkingPieces, attackColor)
     if (result === "no threat") {
       break;
@@ -42,6 +44,8 @@ export const verticalCheck = (updatedBoard, kingCell, attackColor, forBlockVerti
 
   // check down the board
   for (let i = 1; i <= movesDown; i++) {
+    if ((i === 1 && attackColor === "White") || (i ===2 && attackColor === "White" && kingCell.row === 5)) checkingPieces = ["Rook", "Queen", "Pawn"]
+
     const result = getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell, checkingPieces, attackColor)
     if (result === "no threat") {
       break;
