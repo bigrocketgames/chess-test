@@ -24,10 +24,7 @@ export const canPieceMoveToNewCell = (board, piece, currentCell, newCell) => {
 
     case "King":
       // returns true or false to confirm if move by King can be made or not
-      if(validKingMove(currentCell, newCell)) {
-        return !isKingChecked(board, currentCell, newCell)
-      }
-      return false;
+      return validKingMove(currentCell, newCell)
 
     case "Queen":
       // returns true or false to confirm if move by Queen can be made or not
@@ -120,10 +117,6 @@ const validKnightMove = (currentCell, newCell) => {
 
 const validKingMove = (currentCell, newCell) => {
   return (Math.abs(currentCell.row - newCell.row) < 2 && Math.abs(currentCell.cell - newCell.cell) < 2)
-}
-
-const isKingChecked = (board, currentCell, newCell) => {
-  return false
 }
 
 const validQueenMove = (board, currentCell, newCell) => {
