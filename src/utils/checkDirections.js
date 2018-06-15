@@ -1,4 +1,6 @@
-export const horizontalCheck = (updatedBoard, kingCell, attackColor) => {
+import { isKingChecked } from './checkForCheck'
+
+export const horizontalCheck = (updatedBoard, kingCell, attackColor, forBlock = false) => {
   const checkingPieces = ["Rook", "Queen"]
   const movesRight = 8 - kingCell.cell;
   const movesLeft = kingCell.cell - 1;
@@ -26,13 +28,13 @@ export const horizontalCheck = (updatedBoard, kingCell, attackColor) => {
   return false
 }
 
-export const verticalCheck = (updatedBoard, kingCell, attackColor, forBlockVertical = false) => {
+export const verticalCheck = (updatedBoard, kingCell, attackColor, forBlock = false) => {
   let checkingPieces = ["Rook", "Queen"]
   const movesUp = kingCell.row - 1;
   const movesDown = 8 - kingCell.row;
   // check up the board
   for (let i = 1; i <= movesUp; i++) {
-    if ((i === 1 && attackColor === "Black") || (i ===2 && attackColor === "Black" && kingCell.row === 4)) checkingPieces = ["Rook", "Queen", "Pawn"]
+    if ((i === 1 && attackColor === "Black" && forBlock) || (i ===2 && attackColor === "Black" && kingCell.row === 4 && forBlock)) checkingPieces = ["Rook", "Queen", "Pawn"]
     
     const result = getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell, checkingPieces, attackColor)
     if (result === "no threat") {
@@ -44,7 +46,7 @@ export const verticalCheck = (updatedBoard, kingCell, attackColor, forBlockVerti
 
   // check down the board
   for (let i = 1; i <= movesDown; i++) {
-    if ((i === 1 && attackColor === "White") || (i ===2 && attackColor === "White" && kingCell.row === 5)) checkingPieces = ["Rook", "Queen", "Pawn"]
+    if ((i === 1 && attackColor === "White" && forBlock) || (i ===2 && attackColor === "White" && kingCell.row === 5 && forBlock)) checkingPieces = ["Rook", "Queen", "Pawn"]
 
     const result = getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell, checkingPieces, attackColor)
     if (result === "no threat") {
@@ -57,7 +59,7 @@ export const verticalCheck = (updatedBoard, kingCell, attackColor, forBlockVerti
   return false
 }
 
-export const diagonalCheck = (updatedBoard, kingCell, attackColor, canCaptureWithPawn = false) => {
+export const diagonalCheck = (updatedBoard, kingCell, attackColor, canCaptureWithPawn = false, forBlock = false) => {
   let checkingPieces = ["Bishop", "Queen"]
   const movesUp = kingCell.row - 1;
   const movesDown = 8 - kingCell.row;
@@ -116,7 +118,7 @@ export const diagonalCheck = (updatedBoard, kingCell, attackColor, canCaptureWit
 }
 
 // check for knights that put king in check
-export const knightCheck = (updatedBoard, kingCell, attackColor) => {
+export const knightCheck = (updatedBoard, kingCell, attackColor, forBlock = false) => {
   const checkingPieces = ["Knight"];
   const movesUp = (kingCell.row - 1 > 2) ? 2 : kingCell.row - 1
   const movesDown = (8 - kingCell.row > 2) ? 2 : 8 - kingCell.row
@@ -124,14 +126,14 @@ export const knightCheck = (updatedBoard, kingCell, attackColor) => {
   // check top right - -vert +hor
   for (let i = 1; i <= movesUp; i++) {
     if (i === 1) {
-      const result = getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell + 2, checkingPieces, attackColor)
+      const result = (forBlock) ? getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell + 2, checkingPieces, attackColor, true, kingCell) : getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell + 2, checkingPieces, attackColor)
       if (result === "no threat") {
         break;
       } else if (result) {
         return true
       }
     } else {
-      const result = getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell + 1, checkingPieces, attackColor)
+      const result = (forBlock) ? getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell + 1, checkingPieces, attackColor, true, kingCell) : getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell + 1, checkingPieces, attackColor)
       if (result === "no threat") {
         break;
       } else if (result) {
@@ -143,14 +145,14 @@ export const knightCheck = (updatedBoard, kingCell, attackColor) => {
   // check top left - -vert -hor
   for (let i = 1; i <= movesUp; i++) {
     if (i === 1) {
-      const result = getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell - 2, checkingPieces, attackColor)
+      const result = (forBlock) ? getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell - 2, checkingPieces, attackColor, true, kingCell) : getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell - 2, checkingPieces, attackColor)
       if (result === "no threat") {
         break;
       } else if (result) {
         return true
       }
     } else {
-      const result = getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell - 1, checkingPieces, attackColor)
+      const result = (forBlock) ? getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell - 1, checkingPieces, attackColor, true, kingCell) : getCheckCell(updatedBoard, kingCell.row - i, kingCell.cell - 1, checkingPieces, attackColor)
       if (result === "no threat") {
         break;
       } else if (result) {
@@ -162,14 +164,14 @@ export const knightCheck = (updatedBoard, kingCell, attackColor) => {
   // check bottom right - +vert +hor
   for (let i = 1; i <= movesDown; i++) {
     if (i === 1) {
-      const result = getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell + 2, checkingPieces, attackColor)
+      const result = (forBlock) ? getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell + 2, checkingPieces, attackColor, true, kingCell) : getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell + 2, checkingPieces, attackColor)
       if (result === "no threat") {
         break;
       } else if (result) {
         return true
       }
     } else {
-      const result = getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell + 1, checkingPieces, attackColor)
+      const result = (forBlock) ? getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell + 1, checkingPieces, attackColor, true, kingCell) : getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell + 1, checkingPieces, attackColor)
       if (result === "no threat") {
         break;
       } else if (result) {
@@ -181,14 +183,14 @@ export const knightCheck = (updatedBoard, kingCell, attackColor) => {
   // check bottom left - +vert - hor
   for (let i = 1; i <= movesDown; i++) {
     if (i === 1) {
-      const result = getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell - 2, checkingPieces, attackColor)
+      const result = (forBlock) ? getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell - 2, checkingPieces, attackColor, true, kingCell) : getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell - 2, checkingPieces, attackColor)
       if (result === "no threat") {
         break;
       } else if (result) {
         return true
       }
     } else {
-      const result = getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell - 1, checkingPieces, attackColor)
+      const result = (forBlock) ? getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell - 1, checkingPieces, attackColor, true, kingCell) : getCheckCell(updatedBoard, kingCell.row + i, kingCell.cell - 1, checkingPieces, attackColor)
       if (result === "no threat") {
         break;
       } else if (result) {
@@ -200,7 +202,7 @@ export const knightCheck = (updatedBoard, kingCell, attackColor) => {
   return false
 }
 
-export const getCheckCell = (updatedBoard, row, cell, checkingPieces, attackColor) => {
+export const getCheckCell = (updatedBoard, row, cell, checkingPieces, attackColor, checkForSelfCheck = false, kingCell = null) => {
   let checkCell = null;
   checkCell = updatedBoard.find(function(e) {
     return (e.row === row && e.cell === cell)
@@ -208,7 +210,16 @@ export const getCheckCell = (updatedBoard, row, cell, checkingPieces, attackColo
 
   if (checkCell) {
     if (checkingPieces.includes(checkCell.piece) && checkCell.pieceColor === attackColor) {
-      return true
+      if (checkForSelfCheck) {
+        console.log("checking to see if piece causes a self checking situation ", attackColor, checkCell, kingCell)
+        if (isKingChecked(updatedBoard, attackColor, checkCell, kingCell, true)) {
+          return "no threat"
+        } else {
+          return true
+        }
+      } else {
+        return true
+      }
     } else if (checkCell.piece && (checkCell.pieceColor !== attackColor || !checkingPieces.includes(checkCell.piece))) {
       return "no threat"
     }
