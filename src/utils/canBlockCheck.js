@@ -8,11 +8,6 @@ export const canBlockCheck = (board, turnColor, pieceToMove, cell) => {
     return (e.row === cell.row && e.cell === cell.cell)
   })
 
-  // Return false if the attacking piece is a Knight because that check can not be blocked since it can jump pieces.
-  if (attackingPiece.piece === "Knight") {
-    return false
-  }
-
   const kingUnderAttack = updatedBoard.find(function(e) {
     return (e.piece === "King" && e.pieceColor === underAttackColor)
   })
@@ -20,6 +15,11 @@ export const canBlockCheck = (board, turnColor, pieceToMove, cell) => {
   // Return true if the piece that is checking the king can be captured on the next move by the team under attack
   if (horizontalCheck(updatedBoard, attackingPiece, underAttackColor, true) || verticalCheck(updatedBoard, attackingPiece, underAttackColor, true) || diagonalCheck(updatedBoard, attackingPiece, underAttackColor, true, true) || knightCheck(updatedBoard, attackingPiece, underAttackColor, true)) {
     return true
+  }
+
+  // Return false if the attacking piece is a Knight because that check can not be blocked since it can jump pieces.
+  if (attackingPiece.piece === "Knight") {
+    return false
   }
 
   const attackDirection = getAttackDirection(attackingPiece, kingUnderAttack)
