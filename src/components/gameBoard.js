@@ -75,7 +75,9 @@ class GameBoard extends Component {
     const { updateMessageSuccess, gameState } = this.props
 
     // Select the piece the player wishes to move.
-    if (cell.piece !== "" && cell.pieceColor === gameState.turnColor) {
+    if (pieceToMove && ((cell.piece === "Rook" && pieceToMove.piece === "King" && cell.pieceColor === pieceToMove.pieceColor) || (cell.piece === "King" && pieceToMove.piece === "Rook" && cell.pieceColor === pieceToMove.pieceColor))) {
+      console.log("Prepping for castling")
+    } else if (cell.piece !== "" && cell.pieceColor === gameState.turnColor) {
       message = `You have chosen the ${cell.pieceColor} ${cell.piece} in cell ${cell.space}.`
       updateMessageSuccess(message)
       this.setState({
