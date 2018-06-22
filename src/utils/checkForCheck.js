@@ -20,7 +20,7 @@ export const isKingChecked = (board, turnColor, pieceToMove, cell, ownKing = fal
   
 
   // determine if checked from a horizontal attack
-  if (horizontalCheck(updatedBoard, kingToCheck, attackColor) || verticalCheck(updatedBoard, kingToCheck, attackColor) || diagonalCheck(updatedBoard, kingToCheck, attackColor) || knightCheck(updatedBoard, kingToCheck, attackColor)){
+  if (horizontalCheck(updatedBoard, kingToCheck, attackColor) || verticalCheck(updatedBoard, kingToCheck, attackColor) || diagonalCheck(updatedBoard, kingToCheck, attackColor, true) || knightCheck(updatedBoard, kingToCheck, attackColor)){
     return true
   }
 
