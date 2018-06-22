@@ -8,7 +8,7 @@ import { Button } from '../containers/button';
 import { updateMessageSuccess, resetMessageState } from '../redux/message/actions';
 import { moveSuccess, resetBoard } from '../redux/board/actions';
 import { addHistorySuccess, resetHistory } from '../redux/history/actions';
-import { canPieceMoveToNewCell } from '../utils/validMove';
+import { canPieceMoveToNewCell, canCastle } from '../utils/validMove';
 import { isKingChecked, checkMate } from '../utils/checkForCheck';
 import { canBlockCheck } from '../utils/canBlockCheck';
 
@@ -74,10 +74,11 @@ class GameBoard extends Component {
     const { readyToMove, pieceToMove } = this.state
     const { updateMessageSuccess, gameState } = this.props
 
-    // Select the piece the player wishes to move.
-    if (pieceToMove && ((cell.piece === "Rook" && pieceToMove.piece === "King" && cell.pieceColor === pieceToMove.pieceColor) || (cell.piece === "King" && pieceToMove.piece === "Rook" && cell.pieceColor === pieceToMove.pieceColor))) {
-      console.log("Prepping for castling")
+    
+    if (pieceToMove && canCastle(gameState, cell, pieceToMove)) {
+      
     } else if (cell.piece !== "" && cell.pieceColor === gameState.turnColor) {
+      // Select the piece the player wishes to move.
       message = `You have chosen the ${cell.pieceColor} ${cell.piece} in cell ${cell.space}.`
       updateMessageSuccess(message)
       this.setState({

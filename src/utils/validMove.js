@@ -1,5 +1,38 @@
 import { diagonalBlock, verticalBlock, horizontalBlock, pawnBlock } from "./blockedMove";
 
+export const canCastle = (gameState, cell, pieceToMove) => {
+  const attackingColor = gameState.turnColor === "Black" ? "White" : "Black"
+
+  
+  if (gameState.turnColor === "Black") {
+    if ((cell.piece === "Rook" && pieceToMove.piece === "King" && pieceToMove.space === "e8") || (cell.piece === "King" && cell.space === "e8" && pieceToMove.piece === "Rook")) {
+      if ((cell.piece === "Rook" && cell.space === "a8") || (pieceToMove.piece === "Rook" && pieceToMove.space === "a8")) {
+        if (gameState.canBlackCastleLeft) {
+          console.log("check to see if the path left is clear for black")
+        }
+      } else if ((cell.piece === "Rook" && cell.space === "h8") || (pieceToMove.piece === "Rook" && pieceToMove.space === "h8")) {
+        if (gameState.canBlackCastleRight) {
+          console.log("check to see if the path right is clear for black")
+        } 
+      }
+    }
+  } else {
+    if ((cell.piece === "Rook" && pieceToMove.piece === "King" && pieceToMove.space === "e1") || (cell.piece === "King" && cell.space === "e1" && pieceToMove.piece === "Rook")) {
+      if ((cell.piece === "Rook" && cell.space === "a1") || (pieceToMove.piece === "Rook" && pieceToMove.space === "a1")) {
+        if (gameState.canBlackCastleLeft) {
+          console.log("check to see if the path left is clear for white")
+        }
+      } else if ((cell.piece === "Rook" && cell.space === "h1") || (pieceToMove.piece === "Rook" && pieceToMove.space === "h1")) {
+        if (gameState.canBlackCastleRight) {
+          console.log("check to see if the path right is clear for white")
+        } 
+      }
+    }
+  }
+  
+  return false
+}
+
 export const canPieceMoveToNewCell = (board, piece, currentCell, newCell) => {
   switch(piece) {
     case "Bishop":
