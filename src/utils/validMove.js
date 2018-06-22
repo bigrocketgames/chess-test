@@ -6,25 +6,51 @@ export const canCastle = (gameState, cell, pieceToMove) => {
   
   if (gameState.turnColor === "Black") {
     if ((cell.piece === "Rook" && pieceToMove.piece === "King" && pieceToMove.space === "e8") || (cell.piece === "King" && cell.space === "e8" && pieceToMove.piece === "Rook")) {
+      const blackKing = gameState.board.find(space => space.space === "e8");
       if ((cell.piece === "Rook" && cell.space === "a8") || (pieceToMove.piece === "Rook" && pieceToMove.space === "a8")) {
         if (gameState.canBlackCastleLeft) {
-          console.log("check to see if the path left is clear for black")
+          const newCell = gameState.board.find(space => space.space === "b8");
+          // check to see if spaces are blocked to the left
+          if (!horizontalBlock(gameState.board, blackKing, newCell)) {
+            console.log("spaces to the left are open and now we need to make sure those spaces aren't under attack.")
+          } else {
+            console.log("spaces to the left aren't open")
+          }
         }
       } else if ((cell.piece === "Rook" && cell.space === "h8") || (pieceToMove.piece === "Rook" && pieceToMove.space === "h8")) {
         if (gameState.canBlackCastleRight) {
-          console.log("check to see if the path right is clear for black")
+          const newCell = gameState.board.find(space => space.space === "g8");
+          // check to see if spaces are blocked to the right
+          if (!horizontalBlock(gameState.board, blackKing, newCell)) {
+            console.log("spaces to the right are open and now we need to make sure those spaces aren't under attack.")
+          } else {
+            console.log("spaces to the right aren't open")
+          }
         } 
       }
     }
   } else {
     if ((cell.piece === "Rook" && pieceToMove.piece === "King" && pieceToMove.space === "e1") || (cell.piece === "King" && cell.space === "e1" && pieceToMove.piece === "Rook")) {
+      const whiteKing = gameState.board.find(space => space.space === "e1");
       if ((cell.piece === "Rook" && cell.space === "a1") || (pieceToMove.piece === "Rook" && pieceToMove.space === "a1")) {
         if (gameState.canBlackCastleLeft) {
-          console.log("check to see if the path left is clear for white")
+          const newCell = gameState.board.find(space => space.space === "b1");
+          // check to see if spaces are blocked to the left
+          if (!horizontalBlock(gameState.board, whiteKing, newCell)) {
+            console.log("spaces to the left are open and now we need to make sure those spaces aren't under attack.")
+          } else {
+            console.log("spaces to the left aren't open")
+          }
         }
       } else if ((cell.piece === "Rook" && cell.space === "h1") || (pieceToMove.piece === "Rook" && pieceToMove.space === "h1")) {
         if (gameState.canBlackCastleRight) {
-          console.log("check to see if the path right is clear for white")
+          const newCell = gameState.board.find(space => space.space === "g1");
+          // check to see if spaces are blocked to the right
+          if (!horizontalBlock(gameState.board, whiteKing, newCell)) {
+            console.log("spaces to the right are open and now we need to make sure those spaces aren't under attack.")
+          } else {
+            console.log("spaces to the right aren't open")
+          }
         } 
       }
     }
