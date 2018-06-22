@@ -13,7 +13,7 @@ export const canBlockCheck = (board, turnColor, pieceToMove, cell) => {
   })
 
   // Return true if the piece that is checking the king can be captured on the next move by the team under attack
-  if (checkTheChecks(updatedBoard, testCell, underAttackColor, true, true)) {
+  if (checkTheChecks(updatedBoard, attackingPiece, underAttackColor, true, true)) {
     return true
   }
 
