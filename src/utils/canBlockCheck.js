@@ -147,7 +147,7 @@ const canBlockAttack = (updatedBoard, kingUnderAttack, attackingPiece, underAtta
   return false
 }
 
-const checkTheChecks = (updatedBoard, testCell, underAttackColor, canCaptureWithPawn = false, forBlock = false) => {
+export const checkTheChecks = (updatedBoard, testCell, underAttackColor, canCaptureWithPawn = false, forBlock = false) => {
   if (horizontalCheck(updatedBoard, testCell, underAttackColor, forBlock) || verticalCheck(updatedBoard, testCell, underAttackColor, forBlock) || diagonalCheck(updatedBoard, testCell, underAttackColor, canCaptureWithPawn, forBlock) || knightCheck(updatedBoard, testCell, underAttackColor, forBlock)) {
     return true
   }
