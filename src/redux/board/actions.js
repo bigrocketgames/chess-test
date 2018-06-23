@@ -11,7 +11,6 @@ export const moveSuccess = (board) => {
 }
 
 export const updateCastling = (castling) => {
-  debugger
   return ({
     type: UPDATE_CASTLING,
     castling

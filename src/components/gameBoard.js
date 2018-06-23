@@ -122,11 +122,10 @@ class GameBoard extends Component {
     let message = ""
     const { readyToMove, pieceToMove } = this.state
     const { updateMessageSuccess, gameState, updateCastling } = this.props
+    let castlingCopy = JSON.parse(JSON.stringify(gameState.castling))
 
     
     if (pieceToMove && canCastle(gameState, cell, pieceToMove)) {
-      let castlingCopy = JSON.parse(JSON.stringify(gameState.castling))
-      
       if (cell.piece === "Rook") {
         if (gameState.turnColor === "Black") {
           if (cell.space === "a8") {
@@ -249,6 +248,24 @@ class GameBoard extends Component {
           })
         } else {
           const updatedBoard = updateBoard(gameState.board, pieceToMove, cell)
+
+          // Need to make sure that we disable castling if a rook moves
+          if (pieceToMove.piece === "Rook") {
+            if (pieceToMove.space === "a8" && gameState.castling.canBlackCastleLeft) {
+              castlingCopy = {...castlingCopy, canBlackCastleLeft: false}
+              updateCastling(castlingCopy)
+            } else if (pieceToMove.space === "h8" && gameState.castling.canBlackCastleRight) {
+              castlingCopy = {...castlingCopy, canBlackCastleRight: false}
+              updateCastling(castlingCopy)
+            } else if (pieceToMove.space === "a1" && gameState.castling.canWhiteCastleLeft) {
+              castlingCopy = {...castlingCopy, canWhiteCastleLeft: false}
+              updateCastling(castlingCopy)
+            } else if (pieceToMove.space === "h1" && gameState.castling.canWhiteCastleRight) {
+              castlingCopy = {...castlingCopy, canWhiteCastleRight: false}
+              updateCastling(castlingCopy)
+            }
+          }
+
           this.checkingChecks(cell, updatedBoard)
         }
       } else {
