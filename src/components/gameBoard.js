@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { BoardSpace } from '../containers/boardSpace';
 import { Button } from '../containers/button';
 import { updateMessageSuccess, resetMessageState } from '../redux/message/actions';
-import { moveSuccess, resetBoard } from '../redux/board/actions';
+import { moveSuccess, updateCastling, resetBoard } from '../redux/board/actions';
 import { addHistorySuccess, resetHistory } from '../redux/history/actions';
 import { canPieceMoveToNewCell, canCastle } from '../utils/validMove';
 import { isKingChecked, checkMate } from '../utils/checkForCheck';
@@ -121,11 +121,105 @@ class GameBoard extends Component {
   handleCellClick = (e, cell) => {
     let message = ""
     const { readyToMove, pieceToMove } = this.state
-    const { updateMessageSuccess, gameState } = this.props
+    const { updateMessageSuccess, gameState, updateCastling } = this.props
 
     
     if (pieceToMove && canCastle(gameState, cell, pieceToMove)) {
+      let castlingCopy = JSON.parse(JSON.stringify(gameState.castling))
       
+      if (cell.piece === "Rook") {
+        if (gameState.turnColor === "Black") {
+          if (cell.space === "a8") {
+            const newKingCell = gameState.board.find(space => space.space === "c8")
+            const newRookCell = gameState.board.find(space => space.space === "d8")
+
+            let updatedBoard = updateBoard(gameState.board, pieceToMove, newKingCell)
+            updatedBoard = updateBoard(updatedBoard, cell, newRookCell)
+            castlingCopy = {...castlingCopy, canBlackCastleLeft: false, canBlackCastleRight: false}
+
+            this.checkingChecks(newRookCell, updatedBoard)
+            updateCastling(castlingCopy)
+          } else {
+            const newKingCell = gameState.board.find(space => space.space === "g8")
+            const newRookCell = gameState.board.find(space => space.space === "f8")
+
+            let updatedBoard = updateBoard(gameState.board, pieceToMove, newKingCell)
+            updatedBoard = updateBoard(updatedBoard, cell, newRookCell)
+            castlingCopy = {...castlingCopy, canBlackCastleLeft: false, canBlackCastleRight: false}
+
+            this.checkingChecks(newRookCell, updatedBoard)
+            updateCastling(castlingCopy)
+          }
+        } else {
+          if (cell.space === "a1") {
+            const newKingCell = gameState.board.find(space => space.space === "c1")
+            const newRookCell = gameState.board.find(space => space.space === "d1")
+
+            let updatedBoard = updateBoard(gameState.board, pieceToMove, newKingCell)
+            updatedBoard = updateBoard(updatedBoard, cell, newRookCell)
+            castlingCopy = {...castlingCopy, canWhiteCastleLeft: false, canWhiteCastleRight: false}
+
+            this.checkingChecks(newRookCell, updatedBoard)
+            updateCastling(castlingCopy)
+          } else {
+            const newKingCell = gameState.board.find(space => space.space === "g1")
+            const newRookCell = gameState.board.find(space => space.space === "f1")
+
+            let updatedBoard = updateBoard(gameState.board, pieceToMove, newKingCell)
+            updatedBoard = updateBoard(updatedBoard, cell, newRookCell)
+            castlingCopy = {...castlingCopy, canWhiteCastleLeft: false, canWhiteCastleRight: false}
+
+            this.checkingChecks(newRookCell, updatedBoard)
+            updateCastling(castlingCopy)
+          }
+        }
+      } else {
+        if (gameState.turnColor === "Black") {
+          if (pieceToMove.space === "a8") {
+            const newKingCell = gameState.board.find(space => space.space === "c8")
+            const newRookCell = gameState.board.find(space => space.space === "d8")
+
+            let updatedBoard = updateBoard(gameState.board, cell, newKingCell)
+            updatedBoard = updateBoard(updatedBoard, pieceToMove, newRookCell)
+            castlingCopy = {...castlingCopy, canBlackCastleLeft: false, canBlackCastleRight: false}
+
+            this.checkingChecks(newRookCell, updatedBoard)
+            updateCastling(castlingCopy)
+          } else {
+            const newKingCell = gameState.board.find(space => space.space === "g8")
+            const newRookCell = gameState.board.find(space => space.space === "f8")
+
+            let updatedBoard = updateBoard(gameState.board, cell, newKingCell)
+            updatedBoard = updateBoard(updatedBoard, pieceToMove, newRookCell)
+            castlingCopy = {...castlingCopy, canBlackCastleLeft: false, canBlackCastleRight: false}
+
+            this.checkingChecks(newRookCell, updatedBoard)
+            updateCastling(castlingCopy)
+          }
+        } else {
+          if (pieceToMove.space === "a1") {
+            const newKingCell = gameState.board.find(space => space.space === "c1")
+            const newRookCell = gameState.board.find(space => space.space === "d1")
+
+            let updatedBoard = updateBoard(gameState.board, cell, newKingCell)
+            updatedBoard = updateBoard(updatedBoard, pieceToMove, newRookCell)
+            castlingCopy = {...castlingCopy, canWhiteCastleLeft: false, canWhiteCastleRight: false}
+
+            this.checkingChecks(newRookCell, updatedBoard)
+            updateCastling(castlingCopy)
+          } else {
+            const newKingCell = gameState.board.find(space => space.space === "g1")
+            const newRookCell = gameState.board.find(space => space.space === "f1")
+
+            let updatedBoard = updateBoard(gameState.board, cell, newKingCell)
+            updatedBoard = updateBoard(updatedBoard, pieceToMove, newRookCell)
+            castlingCopy = {...castlingCopy, canWhiteCastleLeft: false, canWhiteCastleRight: false}
+
+            this.checkingChecks(newRookCell, updatedBoard)
+            updateCastling(castlingCopy)
+          }
+        }
+      }
     } else if (cell.piece !== "" && cell.pieceColor === gameState.turnColor) {
       // Select the piece the player wishes to move.
       message = `You have chosen the ${cell.pieceColor} ${cell.piece} in ${cell.space}.`
@@ -214,7 +308,8 @@ const mapdDispatchToProps = (dispatch) => {
     moveSuccess: moveSuccess,
     resetBoard: resetBoard,
     addHistorySuccess: addHistorySuccess,
-    resetHistory: resetHistory
+    resetHistory: resetHistory,
+    updateCastling: updateCastling
   }, dispatch);
 }
 

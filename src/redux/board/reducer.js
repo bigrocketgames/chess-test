@@ -1,4 +1,4 @@
-import { MOVE_SUCCESS, RESET_BOARD_SUCCESS, REWIND_BOARD_SUCCESS } from './actions';
+import { MOVE_SUCCESS, RESET_BOARD_SUCCESS, REWIND_BOARD_SUCCESS, UPDATE_CASTLING } from './actions';
 
 const initialState = { board: [
   {id: 1, row: 1, cell: 1, space: "a8", value: "rookblack", color: "light", piece: "Rook", pieceColor: "Black"}, 
@@ -44,7 +44,7 @@ const initialState = { board: [
   {id: 62, row: 8, cell: 6, space: "f1", value: "bishopwhite", color: "light", piece: "Bishop", pieceColor: "White"}, 
   {id: 63, row: 8, cell: 7, space: "g1", value: "knightwhite", color: "dark", piece: "Knight", pieceColor: "White"}, 
   {id: 64, row: 8, cell: 8, space: "h1", value: "rookwhite", color: "light", piece: "Rook", pieceColor: "White"},
-], turnColor: "White", canWhiteCastleRight: true, canWhiteCastleLeft: true, canBlackCastleRight: true, canBlackCastleLeft: true}
+], turnColor: "White", castling: {canWhiteCastleRight: true, canWhiteCastleLeft: true, canBlackCastleRight: true, canBlackCastleLeft: true}}
 
 export default (state = initialState, action) => {
   switch(action.type) {
@@ -58,38 +58,11 @@ export default (state = initialState, action) => {
         turnColor: nextColor
       }
 
-      // find the old and new cells and update them
-      // const oldCellIndex = state.board.findIndex(cell => cell.id === action.oldCell.id)
-      // const newCellIndex = state.board.findIndex(cell => cell.id === action.newCell.id)
-      // const updatedOldCell = {...action.oldCell, piece: "", pieceColor: "", value: ""}
-      // const updatedNewCell = {...action.newCell, piece: action.oldCell.piece, pieceColor: action.oldCell.pieceColor, value: action.oldCell.value}
-
-      // update state depending on whether the newer or older cell had the higher index so they input in the correct order
-      // if (oldCellIndex > newCellIndex) {
-      //   return {
-      //     ...state,
-      //     board: [
-      //     ...state.board.slice(0, newCellIndex),
-      //     updatedNewCell,
-      //     ...state.board.slice(newCellIndex + 1, oldCellIndex),
-      //     updatedOldCell,
-      //     ...state.board.slice(oldCellIndex + 1)
-      //     ], 
-      //     turnColor: nextColor 
-      //   }
-      // } else {
-      //   return {
-      //     ...state,
-      //     board: [
-      //     ...state.board.slice(0, oldCellIndex),
-      //     updatedOldCell,
-      //     ...state.board.slice(oldCellIndex + 1, newCellIndex),
-      //     updatedNewCell,
-      //     ...state.board.slice(newCellIndex + 1)
-      //     ],
-      //     turnColor: nextColor
-      //   }
-      // }
+    case UPDATE_CASTLING:
+      return {
+        ...state,
+        castling: action.castling
+      }
 
     case RESET_BOARD_SUCCESS:
       return initialState;
