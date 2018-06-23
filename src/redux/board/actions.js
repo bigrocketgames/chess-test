@@ -2,12 +2,10 @@ export const MOVE_SUCCESS = 'MOVE_SUCCESS';
 export const RESET_BOARD_SUCCESS = 'RESET_BOARD_SUCCESS';
 export const REWIND_BOARD_SUCCESS = 'REWIND_BOARD_SUCCESS';
 
-export const moveSuccess = (piece, oldCell, newCell) => {
+export const moveSuccess = (board) => {
   return({
     type: MOVE_SUCCESS,
-    piece,
-    oldCell,
-    newCell
+    board
   })
 }
 

@@ -52,38 +52,44 @@ export default (state = initialState, action) => {
       // determine who's turn is next
       const nextColor = state.turnColor === "White" ? "Black" : "White"
 
+      return {
+        ...state,
+        board: action.board,
+        turnColor: nextColor
+      }
+
       // find the old and new cells and update them
-      const oldCellIndex = state.board.findIndex(cell => cell.id === action.oldCell.id)
-      const newCellIndex = state.board.findIndex(cell => cell.id === action.newCell.id)
-      const updatedOldCell = {...action.oldCell, piece: "", pieceColor: "", value: ""}
-      const updatedNewCell = {...action.newCell, piece: action.oldCell.piece, pieceColor: action.oldCell.pieceColor, value: action.oldCell.value}
+      // const oldCellIndex = state.board.findIndex(cell => cell.id === action.oldCell.id)
+      // const newCellIndex = state.board.findIndex(cell => cell.id === action.newCell.id)
+      // const updatedOldCell = {...action.oldCell, piece: "", pieceColor: "", value: ""}
+      // const updatedNewCell = {...action.newCell, piece: action.oldCell.piece, pieceColor: action.oldCell.pieceColor, value: action.oldCell.value}
 
       // update state depending on whether the newer or older cell had the higher index so they input in the correct order
-      if (oldCellIndex > newCellIndex) {
-        return {
-          ...state,
-          board: [
-          ...state.board.slice(0, newCellIndex),
-          updatedNewCell,
-          ...state.board.slice(newCellIndex + 1, oldCellIndex),
-          updatedOldCell,
-          ...state.board.slice(oldCellIndex + 1)
-          ], 
-          turnColor: nextColor 
-        }
-      } else {
-        return {
-          ...state,
-          board: [
-          ...state.board.slice(0, oldCellIndex),
-          updatedOldCell,
-          ...state.board.slice(oldCellIndex + 1, newCellIndex),
-          updatedNewCell,
-          ...state.board.slice(newCellIndex + 1)
-          ],
-          turnColor: nextColor
-        }
-      }
+      // if (oldCellIndex > newCellIndex) {
+      //   return {
+      //     ...state,
+      //     board: [
+      //     ...state.board.slice(0, newCellIndex),
+      //     updatedNewCell,
+      //     ...state.board.slice(newCellIndex + 1, oldCellIndex),
+      //     updatedOldCell,
+      //     ...state.board.slice(oldCellIndex + 1)
+      //     ], 
+      //     turnColor: nextColor 
+      //   }
+      // } else {
+      //   return {
+      //     ...state,
+      //     board: [
+      //     ...state.board.slice(0, oldCellIndex),
+      //     updatedOldCell,
+      //     ...state.board.slice(oldCellIndex + 1, newCellIndex),
+      //     updatedNewCell,
+      //     ...state.board.slice(newCellIndex + 1)
+      //     ],
+      //     turnColor: nextColor
+      //   }
+      // }
 
     case RESET_BOARD_SUCCESS:
       return initialState;
