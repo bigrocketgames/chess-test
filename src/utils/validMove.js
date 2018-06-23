@@ -1,4 +1,5 @@
 import { diagonalBlock, verticalBlock, horizontalBlock, pawnBlock } from "./blockedMove";
+import { checkTheChecks } from './canBlockCheck';
 
 export const canCastle = (gameState, cell, pieceToMove) => {
   const attackingColor = gameState.turnColor === "Black" ? "White" : "Black"
@@ -13,6 +14,11 @@ export const canCastle = (gameState, cell, pieceToMove) => {
           // check to see if spaces are blocked to the left
           if (!horizontalBlock(gameState.board, blackKing, newCell)) {
             console.log("spaces to the left are open and now we need to make sure those spaces aren't under attack.")
+            for (let i = 0; i < 3; i++) {
+              const testCell = gameState.board.find(space => (space.row === blackKing.row && space.cell === blackKing.cell - i))
+
+              if (checkTheChecks(gameState.board, testCell, attackingColor, true, false)) return false
+            }
           } else {
             return false
           }
@@ -23,6 +29,11 @@ export const canCastle = (gameState, cell, pieceToMove) => {
           // check to see if spaces are blocked to the right
           if (!horizontalBlock(gameState.board, blackKing, newCell)) {
             console.log("spaces to the right are open and now we need to make sure those spaces aren't under attack.")
+            for (let i = 0; i < 3; i++) {
+              const testCell = gameState.board.find(space => (space.row === blackKing.row && space.cell === blackKing.cell + i))
+
+              if (checkTheChecks(gameState.board, testCell, attackingColor, true, false)) return false
+            }
           } else {
             return false
           }
@@ -38,6 +49,11 @@ export const canCastle = (gameState, cell, pieceToMove) => {
           // check to see if spaces are blocked to the left
           if (!horizontalBlock(gameState.board, whiteKing, newCell)) {
             console.log("spaces to the left are open and now we need to make sure those spaces aren't under attack.")
+            for (let i = 0; i < 3; i++) {
+              const testCell = gameState.board.find(space => (space.row === whiteKing.row && space.cell === whiteKing.cell - i))
+
+              if (checkTheChecks(gameState.board, testCell, attackingColor, true, false)) return false
+            }
           } else {
             return false
           }
@@ -48,6 +64,11 @@ export const canCastle = (gameState, cell, pieceToMove) => {
           // check to see if spaces are blocked to the right
           if (!horizontalBlock(gameState.board, whiteKing, newCell)) {
             console.log("spaces to the right are open and now we need to make sure those spaces aren't under attack.")
+            for (let i = 0; i < 3; i++) {
+              const testCell = gameState.board.find(space => (space.row === whiteKing.row && space.cell === whiteKing.cell + i))
+              console.log("testCell = ", testCell)
+              if (checkTheChecks(gameState.board, testCell, attackingColor, true, false)) return false
+            }
           } else {
             return false
           }
