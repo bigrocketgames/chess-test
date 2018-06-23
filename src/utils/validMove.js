@@ -14,7 +14,7 @@ export const canCastle = (gameState, cell, pieceToMove) => {
           if (!horizontalBlock(gameState.board, blackKing, newCell)) {
             console.log("spaces to the left are open and now we need to make sure those spaces aren't under attack.")
           } else {
-            console.log("spaces to the left aren't open")
+            return false
           }
         }
       } else if ((cell.piece === "Rook" && cell.space === "h8") || (pieceToMove.piece === "Rook" && pieceToMove.space === "h8")) {
@@ -24,7 +24,7 @@ export const canCastle = (gameState, cell, pieceToMove) => {
           if (!horizontalBlock(gameState.board, blackKing, newCell)) {
             console.log("spaces to the right are open and now we need to make sure those spaces aren't under attack.")
           } else {
-            console.log("spaces to the right aren't open")
+            return false
           }
         } 
       }
@@ -39,7 +39,7 @@ export const canCastle = (gameState, cell, pieceToMove) => {
           if (!horizontalBlock(gameState.board, whiteKing, newCell)) {
             console.log("spaces to the left are open and now we need to make sure those spaces aren't under attack.")
           } else {
-            console.log("spaces to the left aren't open")
+            return false
           }
         }
       } else if ((cell.piece === "Rook" && cell.space === "h1") || (pieceToMove.piece === "Rook" && pieceToMove.space === "h1")) {
@@ -49,7 +49,7 @@ export const canCastle = (gameState, cell, pieceToMove) => {
           if (!horizontalBlock(gameState.board, whiteKing, newCell)) {
             console.log("spaces to the right are open and now we need to make sure those spaces aren't under attack.")
           } else {
-            console.log("spaces to the right aren't open")
+            return false
           }
         } 
       }
