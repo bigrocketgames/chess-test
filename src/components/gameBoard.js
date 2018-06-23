@@ -11,6 +11,7 @@ import { addHistorySuccess, resetHistory } from '../redux/history/actions';
 import { canPieceMoveToNewCell, canCastle } from '../utils/validMove';
 import { isKingChecked, checkMate } from '../utils/checkForCheck';
 import { canBlockCheck } from '../utils/canBlockCheck';
+import { updateBoard } from '../utils/boardUpdater';
 
 const initialState = {
   selectedCell: 0,
@@ -47,9 +48,9 @@ class GameBoard extends Component {
   }
 
   // dispatches to update various pieces of state
-  successfulMoveUpdate = (piece, pieceToMove, cell, message, history) => {
+  successfulMoveUpdate = (newBoard, cell, message, history) => {
     // dispatch to board to move piece
-    this.props.moveSuccess(pieceToMove.piece, pieceToMove, cell)
+    this.props.moveSuccess(newBoard)
           
     // dispatch to message to display that a move was made
     this.props.updateMessageSuccess(message)
@@ -67,10 +68,58 @@ class GameBoard extends Component {
     })
   }
 
-  handleCellClick = (e, cell) => {
+  checkingChecks = (cell, updatedBoard) => {
     let message = ""
     let pastGameState = null
     let history = null
+    const { pieceToMove } = this.state
+    const { gameState } = this.props
+    const nextColor = (pieceToMove.pieceColor === "White") ? "Black" : "White"
+
+      // if move is valid - then see if that produces a check on enemy king
+      if (isKingChecked(gameState.board, gameState.turnColor, pieceToMove, cell)) {
+        // if yes - can the check be blocked
+        if (canBlockCheck(gameState.board, gameState.turnColor, pieceToMove, cell)) {
+          // if yes - produce check message
+          pastGameState = gameState;
+          message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to ${cell.space}!  ${nextColor} your king is in check and it is your turn.`
+          const historyMessage = `Moved ${pieceToMove.pieceColor} ${pieceToMove.piece} from ${pieceToMove.space} to ${cell.space} - check`
+          history = {gameState: pastGameState, message: historyMessage}
+
+          this.successfulMoveUpdate(updatedBoard, cell, message, history)
+        } else {
+          // if no - is it a checkmate
+          if (checkMate(gameState.board, gameState.turnColor, pieceToMove, cell)) {
+            // if yes - produce game winning message and lock board
+            pastGameState = gameState;
+            message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to ${cell.space}!  ${nextColor} your king is in checkmate and you have been defeated.`
+            const historyMessage = `Moved ${pieceToMove.pieceColor} ${pieceToMove.piece} from ${pieceToMove.space} to ${cell.space} - checkmate - ${pieceToMove.pieceColor} WINS!!!`
+            history = {gameState: pastGameState, message: historyMessage}
+
+            this.successfulMoveUpdate(updatedBoard, cell, message, history)
+          } else {
+            // if no - produce check message
+            pastGameState = gameState;
+            message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to ${cell.space}!  ${nextColor} your king is in check and it is your turn.`
+            const historyMessage = `Moved ${pieceToMove.pieceColor} ${pieceToMove.piece} from ${pieceToMove.space} to ${cell.space} - check`
+            history = {gameState: pastGameState, message: historyMessage}
+
+            this.successfulMoveUpdate(updatedBoard, cell, message, history)
+          }
+        }
+      } else {
+        // if no - produce move message
+        pastGameState = gameState;
+        message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to ${cell.space}!  ${nextColor} it is your turn.`
+        const historyMessage = `Moved ${pieceToMove.pieceColor} ${pieceToMove.piece} from ${pieceToMove.space} to ${cell.space}`
+        history = {gameState: pastGameState, message: historyMessage}
+
+        this.successfulMoveUpdate(updatedBoard, cell, message, history)
+      }
+  }
+
+  handleCellClick = (e, cell) => {
+    let message = ""
     const { readyToMove, pieceToMove } = this.state
     const { updateMessageSuccess, gameState } = this.props
 
@@ -79,7 +128,7 @@ class GameBoard extends Component {
       
     } else if (cell.piece !== "" && cell.pieceColor === gameState.turnColor) {
       // Select the piece the player wishes to move.
-      message = `You have chosen the ${cell.pieceColor} ${cell.piece} in cell ${cell.space}.`
+      message = `You have chosen the ${cell.pieceColor} ${cell.piece} in ${cell.space}.`
       updateMessageSuccess(message)
       this.setState({
         ...this.state,
@@ -90,16 +139,13 @@ class GameBoard extends Component {
         successfullMoveCell: 0,
       })
     } else if (readyToMove === 'yes') {
-      const nextColor = (pieceToMove.pieceColor === "White") ? "Black" : "White"
-
       // check if piece can move to selected space
       if (canPieceMoveToNewCell(gameState.board, pieceToMove.piece, pieceToMove, cell)) {
-        
         // check to make sure move doesn't put own king in check
         if (isKingChecked(gameState.board, gameState.turnColor, pieceToMove, cell, true)) {
           // if no - produce error message and update message box
           // dispatch to update message to display that an invalid move was attempted
-          message = `You can not move ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space} beucase it will put your own king in check!`
+          message = `You can not move ${pieceToMove.pieceColor} ${pieceToMove.piece} to ${cell.space} beucase it will put your own king in check!`
           updateMessageSuccess(message)
 
           // Set local state to show which cell was erroneously attempted to move to
@@ -108,51 +154,13 @@ class GameBoard extends Component {
             errorMoveCell: cell.id
           })
         } else {
-          // if move is valid - then see if that produces a check on enemy king
-          if (isKingChecked(gameState.board, gameState.turnColor, pieceToMove, cell)) {
-            // if yes - can the check be blocked
-            if (canBlockCheck(gameState.board, gameState.turnColor, pieceToMove, cell)) {
-              // if yes - produce check message
-              pastGameState = gameState;
-              message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!  ${nextColor} your king is in check and it is your turn.`
-              const historyMessage = `Moved ${pieceToMove.pieceColor} ${pieceToMove.piece} from cell ${pieceToMove.space} to cell ${cell.space} - check`
-              history = {gameState: pastGameState, message: historyMessage}
-
-              this.successfulMoveUpdate(pieceToMove.piece, pieceToMove, cell, message, history)
-            } else {
-              // if no - is it a checkmate
-              if (checkMate(gameState.board, gameState.turnColor, pieceToMove, cell)) {
-                // if yes - produce game winning message and lock board
-                pastGameState = gameState;
-                message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!  ${nextColor} your king is in checkmate and you have been defeated.`
-                const historyMessage = `Moved ${pieceToMove.pieceColor} ${pieceToMove.piece} from cell ${pieceToMove.space} to cell ${cell.space} - checkmate - ${pieceToMove.pieceColor} WINS!!!`
-                history = {gameState: pastGameState, message: historyMessage}
-
-                this.successfulMoveUpdate(pieceToMove.piece, pieceToMove, cell, message, history)
-              } else {
-                // if no - produce check message
-                pastGameState = gameState;
-                message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!  ${nextColor} your king is in check and it is your turn.`
-                const historyMessage = `Moved ${pieceToMove.pieceColor} ${pieceToMove.piece} from cell ${pieceToMove.space} to cell ${cell.space} - check`
-                history = {gameState: pastGameState, message: historyMessage}
-
-                this.successfulMoveUpdate(pieceToMove.piece, pieceToMove, cell, message, history)
-              }
-            }
-          } else {
-            // if no - produce move message
-            pastGameState = gameState;
-            message = `You have successfully moved ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!  ${nextColor} it is your turn.`
-            const historyMessage = `Moved ${pieceToMove.pieceColor} ${pieceToMove.piece} from cell ${pieceToMove.space} to cell ${cell.space}`
-            history = {gameState: pastGameState, message: historyMessage}
-
-            this.successfulMoveUpdate(pieceToMove.piece, pieceToMove, cell, message, history)
-          } 
+          const updatedBoard = updateBoard(gameState.board, pieceToMove, cell)
+          this.checkingChecks(cell, updatedBoard)
         }
       } else {
         // if no - produce error message and update message box
         // dispatch to update message to display that an invalid move was attempted
-        message = `You can not move ${pieceToMove.pieceColor} ${pieceToMove.piece} to cell ${cell.space}!`
+        message = `You can not move ${pieceToMove.pieceColor} ${pieceToMove.piece} to ${cell.space}!`
         updateMessageSuccess(message)
 
         // Set local state to show which cell was erroneously attempted to move to
