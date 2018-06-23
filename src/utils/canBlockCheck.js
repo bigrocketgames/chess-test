@@ -1,4 +1,4 @@
-import { updateBoard } from './checkForCheck';
+import { updateBoard } from './boardUpdater';
 import { horizontalCheck, verticalCheck, diagonalCheck, knightCheck } from './checkDirections';
 
 export const canBlockCheck = (board, turnColor, pieceToMove, cell) => {
