@@ -249,7 +249,7 @@ class GameBoard extends Component {
         } else {
           const updatedBoard = updateBoard(gameState.board, pieceToMove, cell)
 
-          // Need to make sure that we disable castling if a rook moves
+          // Need to make sure that we disable castling if a rook or king moves
           if (pieceToMove.piece === "Rook") {
             if (pieceToMove.space === "a8" && gameState.castling.canBlackCastleLeft) {
               castlingCopy = {...castlingCopy, canBlackCastleLeft: false}
@@ -262,6 +262,14 @@ class GameBoard extends Component {
               updateCastling(castlingCopy)
             } else if (pieceToMove.space === "h1" && gameState.castling.canWhiteCastleRight) {
               castlingCopy = {...castlingCopy, canWhiteCastleRight: false}
+              updateCastling(castlingCopy)
+            }
+          } else if (pieceToMove.piece === "King") {
+            if (pieceToMove.space === "e8" && (gameState.castling.canBlackCastleLeft || gameState.castling.canBlackCastleRight)) {
+              castlingCopy = {...castlingCopy, canBlackCastleLeft: false, canBlackCastleRight: false}
+              updateCastling(castlingCopy)
+            } else if (pieceToMove.space === "e1" && (gameState.castling.canWhiteCastleLeft || gameState.castling.canWhiteCastleRight)) {
+              castlingCopy = {...castlingCopy, canWhiteCastleLeft: false, canWhiteCastleRight: false}
               updateCastling(castlingCopy)
             }
           }
