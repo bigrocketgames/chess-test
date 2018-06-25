@@ -79,7 +79,7 @@ export const canCastle = (gameState, cell, pieceToMove) => {
 }
 
 export const canPromote = (pieceToMove, cell) => {
-  if ((pieceToMove.pieceColor === "White" && cell.row === 1) && (pieceToMove.pieceColor === "Black" && cell.row === 8)) {
+  if ((pieceToMove.pieceColor === "White" && cell.row === 1) || (pieceToMove.pieceColor === "Black" && cell.row === 8)) {
     return true
   }
   return false
