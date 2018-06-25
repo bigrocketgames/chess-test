@@ -8,7 +8,7 @@ import { Button } from '../containers/button';
 import { updateMessageSuccess, resetMessageState } from '../redux/message/actions';
 import { moveSuccess, updateCastling, resetBoard } from '../redux/board/actions';
 import { addHistorySuccess, resetHistory } from '../redux/history/actions';
-import { canPieceMoveToNewCell, canCastle } from '../utils/validMove';
+import { canPieceMoveToNewCell, canCastle, canPromote } from '../utils/validMove';
 import { isKingChecked, checkMate } from '../utils/checkForCheck';
 import { canBlockCheck } from '../utils/canBlockCheck';
 import { updateBoard } from '../utils/boardUpdater';
@@ -68,11 +68,10 @@ class GameBoard extends Component {
     })
   }
 
-  checkingChecks = (cell, updatedBoard) => {
+  checkingChecks = (pieceToMove, cell, updatedBoard) => {
     let message = ""
     let pastGameState = null
     let history = null
-    const { pieceToMove } = this.state
     const { gameState } = this.props
     const nextColor = (pieceToMove.pieceColor === "White") ? "Black" : "White"
 
@@ -136,7 +135,7 @@ class GameBoard extends Component {
             updatedBoard = updateBoard(updatedBoard, cell, newRookCell)
             castlingCopy = {...castlingCopy, canBlackCastleLeft: false, canBlackCastleRight: false}
 
-            this.checkingChecks(newRookCell, updatedBoard)
+            this.checkingChecks(pieceToMove, newRookCell, updatedBoard)
             updateCastling(castlingCopy)
           } else {
             const newKingCell = gameState.board.find(space => space.space === "g8")
@@ -146,7 +145,7 @@ class GameBoard extends Component {
             updatedBoard = updateBoard(updatedBoard, cell, newRookCell)
             castlingCopy = {...castlingCopy, canBlackCastleLeft: false, canBlackCastleRight: false}
 
-            this.checkingChecks(newRookCell, updatedBoard)
+            this.checkingChecks(pieceToMove, newRookCell, updatedBoard)
             updateCastling(castlingCopy)
           }
         } else {
@@ -158,7 +157,7 @@ class GameBoard extends Component {
             updatedBoard = updateBoard(updatedBoard, cell, newRookCell)
             castlingCopy = {...castlingCopy, canWhiteCastleLeft: false, canWhiteCastleRight: false}
 
-            this.checkingChecks(newRookCell, updatedBoard)
+            this.checkingChecks(pieceToMove, newRookCell, updatedBoard)
             updateCastling(castlingCopy)
           } else {
             const newKingCell = gameState.board.find(space => space.space === "g1")
@@ -168,7 +167,7 @@ class GameBoard extends Component {
             updatedBoard = updateBoard(updatedBoard, cell, newRookCell)
             castlingCopy = {...castlingCopy, canWhiteCastleLeft: false, canWhiteCastleRight: false}
 
-            this.checkingChecks(newRookCell, updatedBoard)
+            this.checkingChecks(pieceToMove, newRookCell, updatedBoard)
             updateCastling(castlingCopy)
           }
         }
@@ -182,7 +181,7 @@ class GameBoard extends Component {
             updatedBoard = updateBoard(updatedBoard, pieceToMove, newRookCell)
             castlingCopy = {...castlingCopy, canBlackCastleLeft: false, canBlackCastleRight: false}
 
-            this.checkingChecks(newRookCell, updatedBoard)
+            this.checkingChecks(pieceToMove, newRookCell, updatedBoard)
             updateCastling(castlingCopy)
           } else {
             const newKingCell = gameState.board.find(space => space.space === "g8")
@@ -192,7 +191,7 @@ class GameBoard extends Component {
             updatedBoard = updateBoard(updatedBoard, pieceToMove, newRookCell)
             castlingCopy = {...castlingCopy, canBlackCastleLeft: false, canBlackCastleRight: false}
 
-            this.checkingChecks(newRookCell, updatedBoard)
+            this.checkingChecks(pieceToMove, newRookCell, updatedBoard)
             updateCastling(castlingCopy)
           }
         } else {
@@ -204,7 +203,7 @@ class GameBoard extends Component {
             updatedBoard = updateBoard(updatedBoard, pieceToMove, newRookCell)
             castlingCopy = {...castlingCopy, canWhiteCastleLeft: false, canWhiteCastleRight: false}
 
-            this.checkingChecks(newRookCell, updatedBoard)
+            this.checkingChecks(pieceToMove, newRookCell, updatedBoard)
             updateCastling(castlingCopy)
           } else {
             const newKingCell = gameState.board.find(space => space.space === "g1")
@@ -214,7 +213,7 @@ class GameBoard extends Component {
             updatedBoard = updateBoard(updatedBoard, pieceToMove, newRookCell)
             castlingCopy = {...castlingCopy, canWhiteCastleLeft: false, canWhiteCastleRight: false}
 
-            this.checkingChecks(newRookCell, updatedBoard)
+            this.checkingChecks(pieceToMove, newRookCell, updatedBoard)
             updateCastling(castlingCopy)
           }
         }
@@ -247,7 +246,24 @@ class GameBoard extends Component {
             errorMoveCell: cell.id
           })
         } else {
-          const updatedBoard = updateBoard(gameState.board, pieceToMove, cell)
+          let updatedBoard = null;
+          // check to see if it is a pawn that can promote
+          if (pieceToMove.piece === "Pawn" && canPromote(pieceToMove, cell)) {
+            let copyPieceToMove = JSON.parse(JSON.stringify(pieceToMove))
+
+            if (copyPieceToMove.pieceColor === "White") {
+              copyPieceToMove.value = "queenwhite"
+              copyPieceToMove.piece = "Queen"
+            } else {
+              copyPieceToMove.value = "queenblack"
+              copyPieceToMove.piece = "Queen"
+            }
+            updatedBoard = updateBoard(gameState.board, copyPieceToMove, cell)
+            this.checkingChecks(copyPieceToMove, cell, updatedBoard)
+          } else {
+            updatedBoard = updateBoard(gameState.board, pieceToMove, cell)
+            this.checkingChecks(pieceToMove, cell, updatedBoard)
+          }
 
           // Need to make sure that we disable castling if a rook or king moves
           if (pieceToMove.piece === "Rook") {
@@ -273,8 +289,7 @@ class GameBoard extends Component {
               updateCastling(castlingCopy)
             }
           }
-
-          this.checkingChecks(cell, updatedBoard)
+          
         }
       } else {
         // if no - produce error message and update message box
