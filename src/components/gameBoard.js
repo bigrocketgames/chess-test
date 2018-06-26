@@ -233,22 +233,21 @@ class GameBoard extends Component {
         successfullMoveCell: 0,
       })
     } else if (readyToMove === 'yes') {
+      let updatedBoard = null;
 
       // check here for enPassant
-      if (gameState.enPassant.status && pieceToMove.piece === "Pawn" && canEnPassant(pieceToMove, cell, gameState.enPassant.cell)) {
-        
-      //   update board for removing piece 
-      //   if (isKingChecked(updatedBoard, gameState.turnColor, pieceToMove, cell, true)){
-            //  
-          // }
-      }
+      if (gameState.enPassant.status && pieceToMove.piece === "Pawn" && canEnPassant(pieceToMove, cell, gameState.enPassant.cell, gameState.enPassant.row)) {
+        const pieceToCapture = gameState.board.find(space => (space.cell === gameState.enPassant.cell && space.row === gameState.enPassant.row))
+        let copyPieceToCapture = JSON.parse(JSON.stringify(pieceToCapture))
+        updatedBoard = JSON.parse(JSON.stringify(gameState.board))
+        const capturedPieceIndex = updatedBoard.findIndex(space => space.cell === gameState.enPassant.cell && space.row === gameState.enPassant.row)
+        copyPieceToCapture.value = ""
+        copyPieceToCapture.piece = ""
+        copyPieceToCapture.pieceColor = ""
 
-
-      // check if piece can move to selected space
-      if (canPieceMoveToNewCell(gameState.board, pieceToMove.piece, pieceToMove, cell)) {
-        // check to make sure move doesn't put own king in check
-        if (isKingChecked(gameState.board, gameState.turnColor, pieceToMove, cell, true)) {
-          // if no - produce error message and update message box
+        updatedBoard = [...updatedBoard.slice(0,capturedPieceIndex), copyPieceToCapture, ...updatedBoard.slice(capturedPieceIndex+1)]
+        if (isKingChecked(updatedBoard, gameState.turnColor, pieceToMove, cell, true)) {
+          // if yes - produce error message and update message box
           // dispatch to update message to display that an invalid move was attempted
           message = `You can not move ${pieceToMove.pieceColor} ${pieceToMove.piece} to ${cell.space} beucase it will put your own king in check!`
           updateMessageSuccess(message)
@@ -259,7 +258,28 @@ class GameBoard extends Component {
             errorMoveCell: cell.id
           })
         } else {
-          let updatedBoard = null;
+          updatedBoard = updateBoard(updatedBoard, pieceToMove, cell)
+          this.checkingChecks(pieceToMove, cell, updatedBoard)
+        }
+        return
+      }
+
+
+      // check if piece can move to selected space
+      if (canPieceMoveToNewCell(gameState.board, pieceToMove.piece, pieceToMove, cell)) {
+        // check to make sure move doesn't put own king in check
+        if (isKingChecked(gameState.board, gameState.turnColor, pieceToMove, cell, true)) {
+          // if yes - produce error message and update message box
+          // dispatch to update message to display that an invalid move was attempted
+          message = `You can not move ${pieceToMove.pieceColor} ${pieceToMove.piece} to ${cell.space} beucase it will put your own king in check!`
+          updateMessageSuccess(message)
+
+          // Set local state to show which cell was erroneously attempted to move to
+          this.setState({
+            ...this.state,
+            errorMoveCell: cell.id
+          })
+        } else {
           // check to see if it is a pawn that can promote
           if (pieceToMove.piece === "Pawn" && canPromote(pieceToMove, cell)) {
             let copyPieceToMove = JSON.parse(JSON.stringify(pieceToMove))

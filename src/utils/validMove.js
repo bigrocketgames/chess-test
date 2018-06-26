@@ -85,8 +85,8 @@ export const canPromote = (pieceToMove, cell) => {
   return false
 }
 
-export const canEnPassant = (pieceToMove, cell, enPassantCell) => {
-  if ((pieceToMove.pieceColor === "White" && cell.row === pieceToMove.row -1 && cell.cell === enPassantCell) || (pieceToMove.pieceColor === "Black" && cell.row === pieceToMove.row + 1 && cell.cell === enPassantCell)) return true
+export const canEnPassant = (pieceToMove, cell, enPassantCell, enPassantRow) => {
+  if ((pieceToMove.pieceColor === "White" && pieceToMove.row === enPassantRow && cell.row === 3 && cell.cell === enPassantCell) || (pieceToMove.pieceColor === "Black" && pieceToMove.row === enPassantRow && cell.row === 6 && cell.cell === enPassantCell)) return true
 
   return false
 }
