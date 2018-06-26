@@ -85,6 +85,12 @@ export const canPromote = (pieceToMove, cell) => {
   return false
 }
 
+export const canEnPassant = (pieceToMove, cell, enPassantCell) => {
+  if ((pieceToMove.pieceColor === "White" && cell.row === pieceToMove.row -1 && cell.cell === enPassantCell) || (pieceToMove.pieceColor === "Black" && cell.row === pieceToMove.row + 1 && cell.cell === enPassantCell)) return true
+
+  return false
+}
+
 export const canPieceMoveToNewCell = (board, piece, currentCell, newCell) => {
   switch(piece) {
     case "Bishop":

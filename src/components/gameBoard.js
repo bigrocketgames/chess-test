@@ -8,7 +8,7 @@ import { Button } from '../containers/button';
 import { updateMessageSuccess, resetMessageState } from '../redux/message/actions';
 import { moveSuccess, updateCastling, resetBoard } from '../redux/board/actions';
 import { addHistorySuccess, resetHistory } from '../redux/history/actions';
-import { canPieceMoveToNewCell, canCastle, canPromote } from '../utils/validMove';
+import { canPieceMoveToNewCell, canCastle, canPromote, canEnPassant } from '../utils/validMove';
 import { isKingChecked, checkMate } from '../utils/checkForCheck';
 import { canBlockCheck } from '../utils/canBlockCheck';
 import { updateBoard } from '../utils/boardUpdater';
@@ -78,7 +78,7 @@ class GameBoard extends Component {
     const nextColor = (pieceToMove.pieceColor === "White") ? "Black" : "White"
 
       if ((gameState.turnColor === "Black" && pieceToMove.piece === "Pawn" && pieceToMove.row === 2 && cell.row === 4) || (gameState.turnColor === "White" && pieceToMove.piece === "Pawn" && pieceToMove.row === 7 && cell.row === 5)) {
-        copyEnPassant = {status: true, cell: `${cell.cell}`}
+        copyEnPassant = {status: true, cell: cell.cell}
       } else {
         copyEnPassant = {status: false, cell: ""}
       }
@@ -233,6 +233,17 @@ class GameBoard extends Component {
         successfullMoveCell: 0,
       })
     } else if (readyToMove === 'yes') {
+
+      // check here for enPassant
+      if (gameState.enPassant.status && pieceToMove.piece === "Pawn" && canEnPassant(pieceToMove, cell, gameState.enPassant.cell)) {
+        console.log("En Passant should be successful")
+      //   update board for removing piece 
+      //   if (isKingChecked(updatedBoard, gameState.turnColor, pieceToMove, cell, true)){
+            //  
+          // }
+      }
+
+
       // check if piece can move to selected space
       if (canPieceMoveToNewCell(gameState.board, pieceToMove.piece, pieceToMove, cell)) {
         // check to make sure move doesn't put own king in check
