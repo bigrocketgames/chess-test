@@ -78,9 +78,9 @@ class GameBoard extends Component {
     const nextColor = (pieceToMove.pieceColor === "White") ? "Black" : "White"
 
       if ((gameState.turnColor === "Black" && pieceToMove.piece === "Pawn" && pieceToMove.row === 2 && cell.row === 4) || (gameState.turnColor === "White" && pieceToMove.piece === "Pawn" && pieceToMove.row === 7 && cell.row === 5)) {
-        copyEnPassant = {status: true, cell: cell.cell}
+        copyEnPassant = {status: true, cell: cell.cell, row: cell.row}
       } else {
-        copyEnPassant = {status: false, cell: ""}
+        copyEnPassant = {status: false, cell: null, row: null}
       }
 
       // if move is valid - then see if that produces a check on enemy king
@@ -236,7 +236,7 @@ class GameBoard extends Component {
 
       // check here for enPassant
       if (gameState.enPassant.status && pieceToMove.piece === "Pawn" && canEnPassant(pieceToMove, cell, gameState.enPassant.cell)) {
-        console.log("En Passant should be successful")
+        
       //   update board for removing piece 
       //   if (isKingChecked(updatedBoard, gameState.turnColor, pieceToMove, cell, true)){
             //  
