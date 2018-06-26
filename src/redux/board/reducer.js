@@ -44,7 +44,7 @@ const initialState = { board: [
   {id: 62, row: 8, cell: 6, space: "f1", value: "bishopwhite", color: "light", piece: "Bishop", pieceColor: "White"}, 
   {id: 63, row: 8, cell: 7, space: "g1", value: "knightwhite", color: "dark", piece: "Knight", pieceColor: "White"}, 
   {id: 64, row: 8, cell: 8, space: "h1", value: "rookwhite", color: "light", piece: "Rook", pieceColor: "White"},
-], turnColor: "White", castling: {canWhiteCastleRight: true, canWhiteCastleLeft: true, canBlackCastleRight: true, canBlackCastleLeft: true}, enPassant: {status: false, space: ""}}
+], turnColor: "White", castling: {canWhiteCastleRight: true, canWhiteCastleLeft: true, canBlackCastleRight: true, canBlackCastleLeft: true}, enPassant: {status: false, cell: ""}}
 
 export default (state = initialState, action) => {
   switch(action.type) {
@@ -55,7 +55,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         board: action.board,
-        turnColor: nextColor
+        turnColor: nextColor,
+        enPassant: action.enPassant
       }
 
     case UPDATE_CASTLING:

@@ -48,9 +48,9 @@ class GameBoard extends Component {
   }
 
   // dispatches to update various pieces of state
-  successfulMoveUpdate = (newBoard, cell, message, history) => {
+  successfulMoveUpdate = (newBoard, copyEnPassant, cell, message, history) => {
     // dispatch to board to move piece
-    this.props.moveSuccess(newBoard)
+    this.props.moveSuccess(newBoard, copyEnPassant)
           
     // dispatch to message to display that a move was made
     this.props.updateMessageSuccess(message)
@@ -74,7 +74,14 @@ class GameBoard extends Component {
     let pastGameState = null
     let history = null
     const { gameState } = this.props
+    let copyEnPassant = JSON.parse(JSON.stringify(gameState.enPassant))
     const nextColor = (pieceToMove.pieceColor === "White") ? "Black" : "White"
+
+      if ((gameState.turnColor === "Black" && pieceToMove.piece === "Pawn" && pieceToMove.row === 2 && cell.row === 4) || (gameState.turnColor === "White" && pieceToMove.piece === "Pawn" && pieceToMove.row === 7 && cell.row === 5)) {
+        copyEnPassant = {status: true, cell: `${cell.cell}`}
+      } else {
+        copyEnPassant = {status: false, cell: ""}
+      }
 
       // if move is valid - then see if that produces a check on enemy king
       if (isKingChecked(gameState.board, gameState.turnColor, pieceToMove, cell)) {
@@ -109,7 +116,7 @@ class GameBoard extends Component {
         history = {gameState: pastGameState, message: historyMessage}
       }
 
-      this.successfulMoveUpdate(updatedBoard, cell, message, history)
+      this.successfulMoveUpdate(updatedBoard, copyEnPassant, cell, message, history)
   }
 
   handleCellClick = (e, cell) => {
