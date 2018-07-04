@@ -19,7 +19,7 @@ class History extends Component {
   }
 
   scrollToBottom() {
-    this.messagesEnd.scrollIntoView({behavior: "smooth"});
+    document.getElementById("historyList").scrollTop = document.getElementById("historyList").scrollHeight
   }
 
   componentDidUpdate() {
@@ -34,9 +34,8 @@ class History extends Component {
     return(
       <div>
         <h2 className="history-title">Previous Moves</h2>
-        <div className="movesContainer">
+        <div id="historyList" className="movesContainer">
           { history.length && history.map(history => <HistoryMessages key={history.id} move={history} />)}
-          <div ref={(el) => { this.messagesEnd = el; }}></div>
         </div>
         {history.length > 1 && <Button classes="rewind-btn" handleClick={() => this.undoMoveOnClick(prevGameState)} label="Undo Move" />}
       </div>
