@@ -1,8 +1,6 @@
 # Chess Test
 
-This is just a project with a simple 8x8 chessboard with both black and white knights and bishops.  The opposing colors can capture one another.  Moves can only be made in accordance with chess rules for the particular pieces.
-
-You have the ability to rewind the game using the "Undo Move" button, or reset the game to its beginning state with the "Reset Board" button.
+This is the game of chess.  You can play it just like the normal game of chess.  Plus, you have the ability to rewind the game using the "Undo Move" button, or reset the game to its beginning state with the "Reset Board" button.
 
 ## To run the project:
 - simply clone or fork the repo onto your own machine
@@ -10,7 +8,7 @@ You have the ability to rewind the game using the "Undo Move" button, or reset t
 - run 'yarn start' or 'npm start' to start the app on your local machine
 
 ### Features of this project:
-- Black and white knights and bishops doing battle.
+- Black and white chess pieces doing battle.
 - The ability to undo moves or reset the board entirely.
 - Game state tracked with redux and local state.
 - Valid moves shown with a flashing green cell and invalid moves shown with a flashing red cell.
@@ -24,5 +22,4 @@ chess pieces by Buch.  You can find them [here](https://opengameart.org/content/
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
-Below you will find some information on how to perform common tasks.<br>
 You can find the most recent version of this guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
